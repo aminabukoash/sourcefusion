@@ -1,17 +1,9 @@
-/*
- ============================================================================
- Name        : sourcefusion.c
- Author      : Amin Abu Koash
- Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
- ============================================================================
- */
-
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/sensor_io.h"
+#include "include/validation.h"
+#include "include/fusion_algorithm.h"
 
 int main(void) {
-	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
-	return EXIT_SUCCESS;
+
 }
