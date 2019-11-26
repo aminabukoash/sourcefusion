@@ -39,14 +39,14 @@ float* get_principal_components(float* eignvalues, float** eignvectors);
  * @param principal_components The principal components of the support degree matrix.
  * @return The individual contribution rates of the principal components.
  */
-float* get_contribution_rates(float* principal_components);
+float* get_contribution_rates(float* principal_components, int number_of_sensors);
 
 /**
  *  Calculate the cumulative contribution rates up to the m principal component.
  * @param contribution_rates The individual contribution rates of the principal components.
  * @return The cumulative contribution rates up to the m principal component.
  */
-float* get_cumulative_contributions(float* contribution_rates);
+float* get_cumulative_contributions(float* contribution_rates, int number_of_sensors);
 
 /**
  * Compute the integrated support degree score for all sensors.
@@ -54,7 +54,7 @@ float* get_cumulative_contributions(float* contribution_rates);
  * @param contribution_rates The individual contribution rates of the principal components.
  * @return The integrated support degree score for all sensors.
  */
-float* get_integrated_support_score(float* principal_components, float* contribution_rates);
+float* get_integrated_support_score(float** principal_components, float* contribution_rates, int number_of_sensors);
 
 /**
  *  Compute the weight coefficient for each sensor.
