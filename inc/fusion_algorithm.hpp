@@ -1,9 +1,22 @@
-/** @file fusion_algorithm.h
+/** @file fusion_algorithm.hpp
  * Contains the declarations for the fusion algorithm functions.
  */
 
-#ifndef FUSION_ALGORITHM_H_
-#define FUSION_ALGORITHM_H_
+#ifndef FUSION_ALGORITHM_HPP_
+#define FUSION_ALGORITHM_HPP_
+
+// All C++ Headers
+#include "../inc/sf_common.hpp"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// All C Headers go here
+
+#ifdef __cplusplus
+}
+#endif
 
 /**
  *  Calculate the support degree matrix.
@@ -71,4 +84,5 @@ float* get_weight_coefficients(float* integrated_scores);
  */
 float get_fused_output(float* sensor_values, float* weight_coefficients);
 
-#endif /* FUSION_ALGORITHM_H_ */
+
+#endif /* FUSION_ALGORITHM_HPP_ */
