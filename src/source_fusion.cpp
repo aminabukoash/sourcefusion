@@ -29,9 +29,6 @@ int main(int argc, char *argv[])
     printf("Program Name Is: %s\n", argv[0]);
     printf("Number of arguments: %d\n", argc);
     //TODO: ask user to provide column data in file
-    //Validate if number entered is valid, and not some random garbage
-
-    //TODO: add custom
 
     int ret = 0;
     if (1 == argc)
@@ -47,19 +44,29 @@ int main(int argc, char *argv[])
     }
     else if (3 == argc)
     {
+        // We assume argv[2] is a number of minutes to determine if a sensor is stuck
+
         if (0 == are_digits(argv[2]))
         {
             int interval = validate_interval(argv[2]);
+            if (-1 != interval)
+            {
+                // TODO: handle sensor stuck
+            }
+        }
+    }
+    else if (4 == argc)
+    {
+        // We assume argv[3] is a range (in minutes) to fuse sensors within that range
+        if (0 == are_digits(argv[3]))
+        {
+            int interval = validate_interval(argv[3]);
             if (-1 != interval)
             {
                 ret = parse_file(argv[1], interval);
                 return ret;
             }
         }
-    }
-    else if (4 == argc)
-    {
-//TODO: Add custom tolerance form time
     }
     else
     {

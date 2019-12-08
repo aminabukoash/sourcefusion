@@ -47,11 +47,8 @@ int parse_file(char *file_name,
 
     //TODO: add interval functionality
 
-    //TODO: handle bad file names
-
     FILE *file = fopen(file_name, "r");
 
-    /* fopen returns 0, the NULL pointer, on failure */
     if (NULL == file)
     {
         printf("Error...\nCannot open file: %s\n", file_name);
