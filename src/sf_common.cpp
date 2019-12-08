@@ -22,8 +22,26 @@ time_t make_time(const char *time)
     tm.tm_mday = 1;
     time_t time_value;
     char time_buffer[100];
+    bool point_seperated = false;
+    int length = strlen(time);
 
-    sscanf(time, "%d:%d", &hours, &minutes);
+    for (int i = 0; i < length; i++)
+    {
+        if (strchr(".", *time))
+        {
+            point_seperated = true;
+        }
+    }
+
+    if (point_seperated)
+    {
+        sscanf(time, "%d.%d", &hours, &minutes);
+    }
+    else
+    {
+        sscanf(time, "%d:%d", &hours, &minutes);
+    }
+
     tm.tm_hour = hours;
     tm.tm_min = minutes;
     tm.tm_sec = 0;

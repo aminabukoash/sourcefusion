@@ -40,10 +40,13 @@ Sensor_t create_sensor_from_line(char *sensorInfo)
 }
 
 int parse_file(char *file_name,
-               int interval_minutes)
+               int sensor_stuck_interval_minutes,
+               int fusion_interval_minutes)
 {
     printf("Program Name Is: %s\n", file_name);
-    printf("interval: %d\n", interval_minutes);
+    printf("Minutes passed to determine if sensor is stuck interval: %d\n",
+           sensor_stuck_interval_minutes);
+    printf("fusion interval: %d\n", fusion_interval_minutes);
 
     //TODO: add interval functionality
 

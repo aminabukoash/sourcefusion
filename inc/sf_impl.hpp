@@ -33,7 +33,8 @@ Sensor_t create_sensor_from_line(char *sensorInfo);
  * a specific timestamp.
  */
 int parse_file(char *file_name,
-               int interval_minutes = 2);
+               int sensor_stuck_interval_minutes = 10,
+               int fusion_interval_minutes = 2);
 
 /**
  * Output a given string to a text file.

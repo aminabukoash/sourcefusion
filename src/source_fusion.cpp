@@ -39,6 +39,10 @@ int main(int argc, char *argv[])
     else if (2 == argc)
     {
         // We assume argv[1] is a filename to open
+
+        //sensos_stuck_interval default is 10 minutes
+        //fusion_interval_minutes default is 2 minutes
+
         ret = parse_file(argv[1]);
         return ret;
     }
@@ -48,8 +52,8 @@ int main(int argc, char *argv[])
 
         if (0 == are_digits(argv[2]))
         {
-            int interval = validate_interval(argv[2]);
-            if (-1 != interval)
+            int sensos_stuck_interval = validate_interval(argv[2]);
+            if (-1 != sensos_stuck_interval)
             {
                 // TODO: handle sensor stuck
             }
@@ -58,12 +62,16 @@ int main(int argc, char *argv[])
     else if (4 == argc)
     {
         // We assume argv[3] is a range (in minutes) to fuse sensors within that range
-        if (0 == are_digits(argv[3]))
+        if (0 == are_digits(argv[2]) && 0 == are_digits(argv[3]))
         {
-            int interval = validate_interval(argv[3]);
-            if (-1 != interval)
+            const int sensos_stuck_interval = validate_interval(argv[2]);
+            const int fusion_interval = validate_interval(argv[3]);
+
+            if (-1 != fusion_interval && -1 != sensos_stuck_interval)
             {
-                ret = parse_file(argv[1], interval);
+                ret = parse_file(argv[1],
+                                 sensos_stuck_interval,
+                                 fusion_interval);
                 return ret;
             }
         }
