@@ -61,12 +61,14 @@ void validate_times(float **sensor_values);
  * @param tolerance The tolerance percentage.
  * @param sensor_values The sensor values.
  */
-void validate_values(float tolerance,
-                     float **sensor_values);
 
 int validate_interval(const char *string);
 
 int are_digits(const char *string);
+
+void check_sensor_stuck(Sensor_t *sensor,
+                        int interval);
+
 
 
 #endif /* SF_IMPL_HPP_ */

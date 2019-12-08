@@ -55,7 +55,9 @@ int main(int argc, char *argv[])
             int sensos_stuck_interval = validate_interval(argv[2]);
             if (-1 != sensos_stuck_interval)
             {
-                // TODO: handle sensor stuck
+                ret = parse_file(argv[1],
+                                 sensos_stuck_interval);
+                return ret;
             }
         }
     }
@@ -64,8 +66,8 @@ int main(int argc, char *argv[])
         // We assume argv[3] is a range (in minutes) to fuse sensors within that range
         if (0 == are_digits(argv[2]) && 0 == are_digits(argv[3]))
         {
-            const int sensos_stuck_interval = validate_interval(argv[2]);
-            const int fusion_interval = validate_interval(argv[3]);
+            int sensos_stuck_interval = validate_interval(argv[2]);
+            int fusion_interval = validate_interval(argv[3]);
 
             if (-1 != fusion_interval && -1 != sensos_stuck_interval)
             {

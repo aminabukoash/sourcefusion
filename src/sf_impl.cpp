@@ -33,8 +33,7 @@ Sensor_t create_sensor_from_line(char *sensorInfo)
     time_t time_value;
     time_value = make_time(get_field(sensorInfo, 1));
     double value = atof(get_field(sensorInfo, 3));
-    sensor.data.insert(std::pair<time_t, double>(time_value,
-                                                 value));
+    sensor.data.push_back(std::make_pair(time_value, value));
     //TODO: create sensor
     return sensor;
 }
@@ -78,19 +77,32 @@ int parse_file(char *file_name,
                     {
                         if (strcmp(get_field(sensorInfo, 2), sensor.name) == 0)
                         {
-                            //TODO:Remove Debug line
-                            printf("Found sensor in list name %s, appending value: %s and time %s\n",
-                                   get_field(sensorInfo, 2),
-                                   get_field(sensorInfo, 3),
-                                   get_field(sensorInfo, 1));
+//                            //TODO:Remove Debug line
+//                            printf("Found sensor in list name %s, appending value: %s and time %s\n",
+//                                   get_field(sensorInfo, 2),
+//                                   get_field(sensorInfo, 3),
+//                                   get_field(sensorInfo, 1));
 
                             time_t time_value;
                             time_value = make_time(get_field(sensorInfo, 1));
 
                             sensorFound = true;
                             double value = atof(get_field(sensorInfo, 3));
-                            sensor.data.insert(std::pair<time_t, double>(time_value,
-                                                                         value));
+                            sensor.data.push_back(std::make_pair(time_value,
+                                                                 value));
+
+                            for (auto itr : sensor.data)
+                            {
+                                char time_buffer[100];
+                                strftime(time_buffer,
+                                         sizeof(time_buffer),
+                                         "Time in sensor data is %H:%M\n",
+                                         localtime(&itr.first));
+                                printf(time_buffer);
+                            }
+                            //TODO: move check to a more appropriate place for efficiency
+                            check_sensor_stuck(&sensor,
+                                               sensor_stuck_interval_minutes);
                         }
                     }
                 }
@@ -160,4 +172,28 @@ int are_digits(const char *string)
     }
     return 0;
 }
+
+void check_sensor_stuck(Sensor_t *sensor,
+                        int interval)
+{
+    printf("Sensor data size: %d\n", sensor->data.size());
+    double diff_in_seconds = 0;
+    for (uint32_t i = 1; i < sensor->data.size(); ++i)
+    {
+        //TODO: handle problem if a new day occurs
+        diff_in_seconds = difftime(sensor->data[i].first,
+                                   sensor->data[i - 1].first);
+
+        printf("diff in seconds? %f\n", diff_in_seconds);
+
+        if ((diff_in_seconds / 60) > interval)
+        {
+            printf("Sensor %s is stuck\n", sensor->name);
+            sensor->status = SensorStatus_t::SENSOR_STATUS_STUCK;
+        }
+    }
+
+
+}
+
 

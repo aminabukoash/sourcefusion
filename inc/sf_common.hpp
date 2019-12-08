@@ -31,8 +31,8 @@ using namespace std;
 #define SENSOR_MAX_NAME_LEN  46
 #define SENSOR_MAX_TIME_LEN 8
 
-// Map of sensor data: time and value
-typedef std::map<time_t, double> SensorDataMap_t;
+// Vector of sensor data: time and value
+typedef std::vector<std::pair<time_t, double>> SensorDataList_t;
 
 typedef enum SensorStatus
 {
@@ -47,7 +47,7 @@ typedef struct Sensor
 {
     char name[SENSOR_MAX_NAME_LEN] = { '\0' }; /**< sensor name*/
     SensorStatus_t status = { SensorStatus_t::SENSOR_STATUS_UNKNOWN }; /**< sensor status*/
-    SensorDataMap_t data; /**< sensor data map*/
+    SensorDataList_t data; /**< sensor data vector*/
 } Sensor_t;
 
 // Vector list of sensors
