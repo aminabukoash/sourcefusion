@@ -11,6 +11,8 @@ extern "C" {
 #endif
 
 // All C Headers go here
+#include <stdio.h>
+#include <ctype.h>
 
 #ifdef __cplusplus
 }
@@ -35,12 +37,16 @@ Sensor_t create_sensor_from_line(char *sensorInfo)
                                                  value));
     //TODO: create sensor
     return sensor;
-
 }
 
-int parse_file(char *file_name)
+int parse_file(char *file_name,
+               int interval_minutes)
 {
     printf("Program Name Is: %s\n", file_name);
+    printf("interval: %d\n", interval_minutes);
+
+    //TODO: add interval functionality
+
     //TODO: handle bad file names
 
     FILE *file = fopen(file_name, "r");
@@ -91,8 +97,8 @@ int parse_file(char *file_name)
                 if (!sensorFound)
                 {
                     sensor = create_sensor_from_line(sensorInfo);
+                    sensorList.push_back(sensor);
                 }
-                sensorList.push_back(sensor);
                 free(sensorInfo);
             }
         }
@@ -101,11 +107,11 @@ int parse_file(char *file_name)
 
     return SUCCESS;
 }
+
 void test_bench()
 {
     //    char *time = strdup(get_field(sensorInfo, 1));
 }
-
 
 int output_file(char *filename,
                 char *content)
@@ -124,5 +130,34 @@ void validate_values(float tolerance,
                      float **sensor_values)
 {
     //TODO: Implement this
+}
+
+int validate_interval(const char *string)
+{
+    int value = atoi(string);
+    printf("Interval value entered: %d\n", value);
+    if (!(0 <= value && value < 60))
+    {
+        printf("Interval value entered is out of range, please enter a value from 0 to 59 in minutes");
+        return -1;
+    }
+    return value;
+}
+
+int are_digits(const char *string)
+{
+    int length = strlen(string);
+
+    for (int i = 0; i < length; i++)
+    {
+        printf("%c\n", string[i]);
+
+        if (!isdigit(string[i]))
+        {
+            printf("Interval: %s entered is not a valid number!", string);
+            return -1;
+        }
+    }
+    return 0;
 }
 

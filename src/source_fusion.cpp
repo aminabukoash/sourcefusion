@@ -43,13 +43,19 @@ int main(int argc, char *argv[])
     {
         // We assume argv[1] is a filename to open
         ret = parse_file(argv[1]);
-
         return ret;
-
     }
     else if (3 == argc)
     {
-//TODO: Add time interval
+        if (0 == are_digits(argv[2]))
+        {
+            int interval = validate_interval(argv[2]);
+            if (-1 != interval)
+            {
+                ret = parse_file(argv[1], interval);
+                return ret;
+            }
+        }
     }
     else if (4 == argc)
     {
@@ -60,6 +66,5 @@ int main(int argc, char *argv[])
         printf("Incorrect number of arguments\n");
         print_usage();
     }
-
     return 0;
 }

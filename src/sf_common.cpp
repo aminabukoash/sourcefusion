@@ -26,7 +26,7 @@ time_t make_time(const char *time)
     sscanf(time, "%d:%d", &hours, &minutes);
     tm.tm_hour = hours;
     tm.tm_min = minutes;
-    tm.tm_sec = 0;  // or simply = ss;
+    tm.tm_sec = 0;
     tm.tm_isdst = 0;
     time_value = mktime(&tm);
 
