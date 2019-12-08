@@ -32,7 +32,8 @@ Sensor_t create_sensor_from_line(char *sensorInfo);
  * @return A matrix with all sensor values. Each row represents all sensor values at
  * a specific timestamp.
  */
-int parse_file(char *file_name);
+int parse_file(char *file_name,
+               int interval_minutes = 2);
 
 /**
  * Output a given string to a text file.
@@ -61,6 +62,10 @@ void validate_times(float **sensor_values);
  */
 void validate_values(float tolerance,
                      float **sensor_values);
+
+int validate_interval(const char *string);
+
+int are_digits(const char *string);
 
 
 #endif /* SF_IMPL_HPP_ */
