@@ -29,6 +29,8 @@ using namespace std;
 
 #define SUCCESS 0
 #define FAIL -1
+#define NEW_LIST 1
+#define APPEND 0
 
 #define SENSOR_MAX_NAME_LEN  46
 #define SENSOR_MAX_TIME_LEN 8
@@ -45,18 +47,30 @@ typedef enum SensorStatus
 
 } SensorStatus_t;
 
+typedef struct SensorStuckInfo
+{
+    SensorStatus_t status = { SensorStatus_t::SENSOR_STATUS_UNKNOWN }; /**< sensor status*/
+    SensorDataList_t data; /**< sensor data vector*/
+} SensorStuckInfo_t;
+
 typedef struct Sensor
 {
     char name[SENSOR_MAX_NAME_LEN] = { '\0' }; /**< sensor name*/
     SensorStatus_t status = { SensorStatus_t::SENSOR_STATUS_UNKNOWN }; /**< sensor status*/
-    SensorDataList_t data; /**< sensor data vector*/
+    time_t time;
+    double value;
 } Sensor_t;
 
 // Vector list of sensors
-typedef std::vector<Sensor_t> SensorsList_t;
+typedef std::vector<SensorStuckInfo_t> SensorsList_t;
+typedef std::vector<Sensor_t> SensorsList_t2;
+
 
 // Vector list of SensorList_t, for each SensorList_t (index) we will perform the fusion algorithm separately
-typedef std::vector<SensorsList_t> FusionList_t;
+typedef std::vector<SensorsList_t2> FusionList_t;
+
+typedef std::map<string, SensorStuckInfo_t> StuckOrNotList_t;
+
 
 time_t make_time(const char *time);
 

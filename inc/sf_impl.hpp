@@ -18,13 +18,9 @@ extern "C" {
 }
 #endif
 
-void test_bench();
-
 //File parsing I/O declarations
 
-
 Sensor_t create_sensor_from_line(char *sensorInfo);
-
 //TODO: adjust comment accordingly
 /**
  * Parse the input file and retrieve sensor values.
@@ -35,6 +31,24 @@ Sensor_t create_sensor_from_line(char *sensorInfo);
 int parse_file(char *file_name,
                int sensor_stuck_interval_minutes = 10,
                int fusion_interval_minutes = 2);
+
+/**
+ * Eliminate sensors that are not supported by more than q% of the sensors,
+ * where q is the tolerance percentage, according to the theory of fault tolerance.
+ * @param tolerance The tolerance percentage.
+ * @param sensor_values The sensor values.
+ */
+
+int validate_interval(const char *string);
+
+void check_sensor_stuck(StuckOrNotList_t *list,
+                        int interval);
+
+int compare_sensors_times(Sensor_t *sensor,
+                          Sensor_t *sensor2,
+                          int interval);
+
+void test_bench();
 
 /**
  * Output a given string to a text file.
@@ -54,19 +68,6 @@ int output_file(char *filename,
  * @param sensor_values
  */
 void validate_times(float **sensor_values);
-
-/**
- * Eliminate sensors that are not supported by more than q% of the sensors,
- * where q is the tolerance percentage, according to the theory of fault tolerance.
- * @param tolerance The tolerance percentage.
- * @param sensor_values The sensor values.
- */
-
-int validate_interval(const char *string);
-
-void check_sensor_stuck(Sensor_t *sensor,
-                        int interval);
-
 
 
 #endif /* SF_IMPL_HPP_ */

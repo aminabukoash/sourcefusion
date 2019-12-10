@@ -20,19 +20,13 @@ extern "C" {
 Sensor_t create_sensor_from_line(char *sensorInfo)
 {
     Sensor_t sensor;
-    //TODO: remove debug lines
-    printf("Field 1 is time  %s\n", get_field(sensorInfo, 1));
-    printf("Field 2 is name %s\n", get_field(sensorInfo, 2));
-    printf("Field 3 is value %s\n", get_field(sensorInfo, 3));
 
     strncpy(sensor.name,
             get_field(sensorInfo, 2),
             sizeof(sensor.name));
 
-    time_t time_value;
-    time_value = make_time(get_field(sensorInfo, 1));
-    double value = atof(get_field(sensorInfo, 3));
-    sensor.data.push_back(std::make_pair(time_value, value));
+    sensor.time = make_time(get_field(sensorInfo, 1));
+    sensor.value = atof(get_field(sensorInfo, 3));
 
     return sensor;
 }
@@ -57,59 +51,100 @@ int parse_file(char *file_name,
     {
         char line[1024];
         int count = 0;
-        SensorsList_t sensorList;
+        SensorsList_t2 sensorList;
         FusionList_t fusionList;
+        StuckOrNotList_t sutckornotlist;
 
         while (fgets(line, 1024, file))
         {
-            bool sensorFound = false;
             count++;
             if (1 != count)
             {
                 Sensor_t sensor;
                 char *sensorInfo = strdup(line);
+                sensor = create_sensor_from_line(sensorInfo);
                 if (!sensorList.empty())
                 {
-                    for (Sensor_t sensor : sensorList)
+                    //Handle stuckornot list
+                    auto it = sutckornotlist.find(sensor.name);
+
+                    if (it != sutckornotlist.end())
                     {
-                        if (strcmp(get_field(sensorInfo, 2), sensor.name) == 0)
-                        {
-                            printf("Found sensor %s in list , appending values!\n",
-                                   get_field(sensorInfo, 2));
+                        printf("sensor: %s found with value %f\n",
+                               sensor.name,
+                               sensor.value);
 
-                            time_t time_value;
-                            time_value = make_time(get_field(sensorInfo, 1));
+                        it->second.data.push_back(make_pair(sensor.time,
+                                                            sensor.value));
+//                        char time_buffer[100];
+//                        strftime(time_buffer,
+//                                 sizeof(time_buffer),
+//                                 "Time in sensor data is %H:%M\n",
+//                                 localtime(&sensor.time));
+//
+//                        printf(time_buffer);
+                    }
+                    else
+                    {
+                        SensorDataList_t dataList;
+                        SensorStuckInfo_t sensorInfo;
+                        printf("sensor: %s not found. Adding to stuckornot\n",
+                               sensor.name);
 
-                            sensorFound = true;
-                            double value = atof(get_field(sensorInfo, 3));
-                            sensor.data.push_back(std::make_pair(time_value,
-                                                                 value));
+                        dataList.push_back(make_pair(sensor.time,
+                                                     sensor.value));
 
-                            //TODO: remove debugging loop
-                            for (auto itr : sensor.data)
-                            {
-                                char time_buffer[100];
-                                strftime(time_buffer,
-                                         sizeof(time_buffer),
-                                         "Time in sensor data is %H:%M\n",
-                                         localtime(&itr.first));
-                                printf(time_buffer);
-                            }
-                            //TODO: move check to a more appropriate place for efficiency
-                            check_sensor_stuck(&sensor,
-                                               sensor_stuck_interval_minutes);
-                        }
+                        sensorInfo.data = dataList;
+                        sutckornotlist.insert(make_pair(sensor.name,
+                                                        sensorInfo));
+                    }
+
+                    // handle sensor fusion lists
+                    int compare_status =
+                            compare_sensors_times(&sensorList[0],
+                                                  &sensor,
+                                                  fusion_interval_minutes);
+
+                    if (APPEND == compare_status)
+                    {
+                        sensorList.push_back(sensor);
+                        //TODO: should we check for duplicates?
+                        // How do we bloody handle them?
+                    }
+                    else
+                    {
+                        // push the sensor to the Fusion List
+                        fusionList.push_back(sensorList);
+                        // Clear it to start a new sensorList
+                        sensorList.clear();
+                        // Push the sensor to the new list
+                        sensorList.push_back(sensor);
                     }
                 }
-                if (!sensorFound)
+                else
                 {
-                    sensor = create_sensor_from_line(sensorInfo);
+                    printf("Brand new list, adding sensor\n");
                     sensorList.push_back(sensor);
+
+                    SensorDataList_t dataList;
+                    SensorStuckInfo_t sensorInfo;
+                    printf("sensor: %s not found. Adding to stuckornot\n",
+                           sensor.name);
+
+                    dataList.push_back(make_pair(sensor.time,
+                                                 sensor.value));
+
+                    sensorInfo.data = dataList;
+                    sutckornotlist.insert(make_pair(sensor.name,
+                                                    sensorInfo));
                 }
                 free(sensorInfo);
             }
         }
         fclose(file);
+
+        check_sensor_stuck(&sutckornotlist,
+                           sensor_stuck_interval_minutes);
     }
 
     return SUCCESS;
@@ -126,31 +161,76 @@ int validate_interval(const char *string)
     return value;
 }
 
-void check_sensor_stuck(Sensor_t *sensor,
+void check_sensor_stuck(StuckOrNotList_t *list,
                         int interval)
 {
     double diff_in_seconds = 0;
-    for (uint32_t i = 1; i < sensor->data.size(); ++i)
+
+    for (auto it = list->begin(); it != list->end(); it++)
     {
-        //TODO: handle problem if a new day occurs
-        diff_in_seconds = difftime(sensor->data[i].first,
-                                   sensor->data[i - 1].first);
+        printf("checking sensor %s....\n", it->first.c_str());
 
-        printf("diff in seconds? %f\n", diff_in_seconds);
-
-        if ((diff_in_seconds / 60) > interval)
+        int size = it->second.data.size();
+        for (int i = 1; i < size; ++i)
         {
-            printf("Sensor %s is stuck\n", sensor->name);
-            //TODO: what if it gets unstuck?
-            sensor->status = SensorStatus_t::SENSOR_STATUS_STUCK;
+            if (size > 1)
+            {
+                //TODO: handle problem if a new day occurs
+                diff_in_seconds = difftime(it->second.data[i].first,
+                                           it->second.data[i - 1].first);
+
+                if ((diff_in_seconds / 60) > interval)
+                {
+                    if (it->second.data[i].second
+                        == it->second.data[i - 1].second)
+                    {
+                        printf("Sensor %s is stuck with value %f\n",
+                               it->first.c_str(),
+                               it->second.data[i].second);
+
+                        it->second.status = SensorStatus_t::SENSOR_STATUS_STUCK;
+                    }
+                }
+            }
+            else
+            {
+                it->second.status = SensorStatus_t::SENSOR_STATUS_ON;
+
+            }
         }
     }
+}
 
+int compare_sensors_times(Sensor_t *sensor,
+                          Sensor_t *sensor2,
+                          int interval)
+{
+    double diff_in_seconds = 0;
+
+        //TODO: handle problem if a new day occurs
+    diff_in_seconds = difftime(sensor2->time,
+                               sensor->time);
+
+    printf("diff in seconds? %f\n", diff_in_seconds);
+
+    if ((diff_in_seconds / 60) > interval)
+    {
+        printf("Sensor %s is past the interval, adding to a new list\n",
+               sensor2->name);
+        return NEW_LIST;
+    }
+    else
+    {
+        printf("Sensor %s is within interval, appending to list \n",
+               sensor2->name);
+        return APPEND;
+
+    }
 }
 
 void test_bench()
 {
-    //    char *time = strdup(get_field(sensorInfo, 1));
+
 }
 
 int output_file(char *filename,
@@ -160,15 +240,9 @@ int output_file(char *filename,
     return 0;
 }
 
-void validate_times(float **sensor_values)
-{
-    //TODO: Implement this
-}
-
 void validate_values(float tolerance,
                      float **sensor_values)
 {
     //TODO: Implement this
 }
-
 

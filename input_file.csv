@@ -1,0 +1,14 @@
+time,name,temp
+4,sens1,10
+4,sens2,12
+4:02,sens3,14
+6:00,sens1,13
+6:01,sens4,20
+6:03,sens5,21
+9:04,sens1,10
+9:04,sens2,12
+9:04,sens3,15
+10:05,sens1,12
+10:05,sens5,3
+10:07,sens3,11
+11:01,sens300,250
