@@ -51,7 +51,7 @@ int parse_file(char *file_name,
     {
         char line[1024];
         int count = 0;
-        SensorsList_t2 sensorList;
+        SensorsList_t sensorList;
         FusionList_t fusionList;
         StuckOrNotList_t sutckornotlist;
 

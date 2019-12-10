@@ -40,7 +40,6 @@ typedef std::vector<std::pair<time_t, double>> SensorDataList_t;
 
 typedef enum SensorStatus
 {
-
     SENSOR_STATUS_STUCK = 0,
     SENSOR_STATUS_ON,
     SENSOR_STATUS_UNKNOWN
@@ -62,13 +61,13 @@ typedef struct Sensor
 } Sensor_t;
 
 // Vector list of sensors
-typedef std::vector<SensorStuckInfo_t> SensorsList_t;
-typedef std::vector<Sensor_t> SensorsList_t2;
+typedef std::vector<Sensor_t> SensorsList_t;
 
 
 // Vector list of SensorList_t, for each SensorList_t (index) we will perform the fusion algorithm separately
-typedef std::vector<SensorsList_t2> FusionList_t;
+typedef std::vector<SensorsList_t> FusionList_t;
 
+//map to validate if sensor is stuck or not
 typedef std::map<string, SensorStuckInfo_t> StuckOrNotList_t;
 
 
