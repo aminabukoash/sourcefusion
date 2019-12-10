@@ -11,7 +11,6 @@ extern "C" {
 #endif
 
 // All C Headers go here
-#include <stdio.h>
 #include <ctype.h>
 
 #ifdef __cplusplus
@@ -22,7 +21,7 @@ Sensor_t create_sensor_from_line(char *sensorInfo)
 {
     Sensor_t sensor;
     //TODO: remove debug lines
-    printf("Field 1 is time would be %s\n", get_field(sensorInfo, 1));
+    printf("Field 1 is time  %s\n", get_field(sensorInfo, 1));
     printf("Field 2 is name %s\n", get_field(sensorInfo, 2));
     printf("Field 3 is value %s\n", get_field(sensorInfo, 3));
 
@@ -34,7 +33,7 @@ Sensor_t create_sensor_from_line(char *sensorInfo)
     time_value = make_time(get_field(sensorInfo, 1));
     double value = atof(get_field(sensorInfo, 3));
     sensor.data.push_back(std::make_pair(time_value, value));
-    //TODO: create sensor
+
     return sensor;
 }
 
@@ -42,12 +41,9 @@ int parse_file(char *file_name,
                int sensor_stuck_interval_minutes,
                int fusion_interval_minutes)
 {
-    printf("Program Name Is: %s\n", file_name);
     printf("Minutes passed to determine if sensor is stuck interval: %d\n",
            sensor_stuck_interval_minutes);
     printf("fusion interval: %d\n", fusion_interval_minutes);
-
-    //TODO: add interval functionality
 
     FILE *file = fopen(file_name, "r");
 
@@ -62,6 +58,7 @@ int parse_file(char *file_name,
         char line[1024];
         int count = 0;
         SensorsList_t sensorList;
+        FusionList_t fusionList;
 
         while (fgets(line, 1024, file))
         {
@@ -77,11 +74,8 @@ int parse_file(char *file_name,
                     {
                         if (strcmp(get_field(sensorInfo, 2), sensor.name) == 0)
                         {
-//                            //TODO:Remove Debug line
-//                            printf("Found sensor in list name %s, appending value: %s and time %s\n",
-//                                   get_field(sensorInfo, 2),
-//                                   get_field(sensorInfo, 3),
-//                                   get_field(sensorInfo, 1));
+                            printf("Found sensor %s in list , appending values!\n",
+                                   get_field(sensorInfo, 2));
 
                             time_t time_value;
                             time_value = make_time(get_field(sensorInfo, 1));
@@ -91,6 +85,7 @@ int parse_file(char *file_name,
                             sensor.data.push_back(std::make_pair(time_value,
                                                                  value));
 
+                            //TODO: remove debugging loop
                             for (auto itr : sensor.data)
                             {
                                 char time_buffer[100];
@@ -120,34 +115,9 @@ int parse_file(char *file_name,
     return SUCCESS;
 }
 
-void test_bench()
-{
-    //    char *time = strdup(get_field(sensorInfo, 1));
-}
-
-int output_file(char *filename,
-                char *content)
-{
-    //TODO: Implement this
-    return 0;
-}
-
-
-void validate_times(float **sensor_values)
-{
-    //TODO: Implement this
-}
-
-void validate_values(float tolerance,
-                     float **sensor_values)
-{
-    //TODO: Implement this
-}
-
 int validate_interval(const char *string)
 {
     int value = atoi(string);
-    printf("Interval value entered: %d\n", value);
     if (!(0 <= value && value < 60))
     {
         printf("Interval value entered is out of range, please enter a value from 0 to 59 in minutes");
@@ -156,27 +126,9 @@ int validate_interval(const char *string)
     return value;
 }
 
-int are_digits(const char *string)
-{
-    int length = strlen(string);
-
-    for (int i = 0; i < length; i++)
-    {
-        printf("%c\n", string[i]);
-
-        if (!isdigit(string[i]))
-        {
-            printf("Interval: %s entered is not a valid number!", string);
-            return -1;
-        }
-    }
-    return 0;
-}
-
 void check_sensor_stuck(Sensor_t *sensor,
                         int interval)
 {
-    printf("Sensor data size: %d\n", sensor->data.size());
     double diff_in_seconds = 0;
     for (uint32_t i = 1; i < sensor->data.size(); ++i)
     {
@@ -189,11 +141,34 @@ void check_sensor_stuck(Sensor_t *sensor,
         if ((diff_in_seconds / 60) > interval)
         {
             printf("Sensor %s is stuck\n", sensor->name);
+            //TODO: what if it gets unstuck?
             sensor->status = SensorStatus_t::SENSOR_STATUS_STUCK;
         }
     }
 
+}
 
+void test_bench()
+{
+    //    char *time = strdup(get_field(sensorInfo, 1));
+}
+
+int output_file(char *filename,
+                char *content)
+{
+    //TODO: Implement this
+    return 0;
+}
+
+void validate_times(float **sensor_values)
+{
+    //TODO: Implement this
+}
+
+void validate_values(float tolerance,
+                     float **sensor_values)
+{
+    //TODO: Implement this
 }
 
 

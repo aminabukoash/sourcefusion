@@ -9,8 +9,6 @@ extern "C" {
 #endif
 
 // All C Headers go here
-#include <stdio.h>
-#include <stdlib.h>
 
 #ifdef __cplusplus
 }

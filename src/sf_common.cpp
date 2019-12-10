@@ -6,8 +6,6 @@ extern "C" {
 #endif
 
 // All C Headers go here
-#include <stdio.h>
-#include <stdlib.h>
 
 #ifdef __cplusplus
 }
@@ -21,7 +19,6 @@ time_t make_time(const char *time)
     tm.tm_mon = 1 - 1; // Months form January
     tm.tm_mday = 1;
     time_t time_value;
-    char time_buffer[100];
     bool point_seperated = false;
     int length = strlen(time);
 
@@ -54,6 +51,7 @@ time_t make_time(const char *time)
     }
     else
     {
+        char time_buffer[100];
         strftime(time_buffer,
                  sizeof(time_buffer),
                  "%H:%M\n",
@@ -73,10 +71,14 @@ char* get_field(const char *line,
     {
         len = strcspn(p, ",\n");
         if (--num <= 0)
+        {
             break;
+        }
         p += len;
         if (*p == ',')
+        {
             p++;
+        }
     }
     res = (char*) malloc(len + 1);
     if (res)
@@ -85,5 +87,20 @@ char* get_field(const char *line,
         res[len] = '\0';
     }
     return res;
+}
+
+int are_digits(const char *string)
+{
+    int length = strlen(string);
+
+    for (int i = 0; i < length; i++)
+    {
+        if (!isdigit(string[i]))
+        {
+            printf("Value: %s entered is not a valid number!", string);
+            return -1;
+        }
+    }
+    return 0;
 }
 

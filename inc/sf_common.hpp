@@ -19,6 +19,8 @@ extern "C" {
 // All C Headers go here
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 }
@@ -53,10 +55,14 @@ typedef struct Sensor
 // Vector list of sensors
 typedef std::vector<Sensor_t> SensorsList_t;
 
+// Vector list of SensorList_t, for each SensorList_t (index) we will perform the fusion algorithm separately
+typedef std::vector<SensorsList_t> FusionList_t;
+
 time_t make_time(const char *time);
 
 char* get_field(const char *line,
                int num);
 
+int are_digits(const char *string);
 
 #endif /* SF_COMMON_HPP_ */
