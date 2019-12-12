@@ -1,3 +1,4 @@
+
 /** @file fusion_algorithm.hpp
  * Contains the declarations for the fusion algorithm functions.
  */

@@ -1,6 +1,6 @@
-/*
- * SfCommon.hpp
- *
+
+/** @file SfCommon.hpp
+ *  @brief contains the common data structures used in the sensor fusion project
  */
 
 #ifndef SF_COMMON_HPP_
@@ -35,9 +35,10 @@ using namespace std;
 #define SENSOR_MAX_NAME_LEN  46
 #define SENSOR_MAX_TIME_LEN 8
 
-// Vector of sensor data: time and value
+// Vector of sensor data: timestamp and value
 typedef std::vector<std::pair<time_t, double>> SensorDataList_t;
 
+// sensor status enum
 typedef enum SensorStatus
 {
     SENSOR_STATUS_STUCK = 0,
@@ -46,18 +47,19 @@ typedef enum SensorStatus
 
 } SensorStatus_t;
 
-typedef struct SensorStuckInfo
+// Sensor state Information structure, this structure hold the Sensor Status Information
+typedef struct SensorStateInfo
 {
     SensorStatus_t status = { SensorStatus_t::SENSOR_STATUS_UNKNOWN }; /**< sensor status*/
     SensorDataList_t data; /**< sensor data vector*/
-} SensorStuckInfo_t;
+} SensorStateInfo_t;
 
+// Sensor structure
 typedef struct Sensor
 {
-    char name[SENSOR_MAX_NAME_LEN] = { '\0' }; /**< sensor name*/
-    SensorStatus_t status = { SensorStatus_t::SENSOR_STATUS_UNKNOWN }; /**< sensor status*/
-    time_t time;
-    double value;
+    char name[SENSOR_MAX_NAME_LEN] = { '\0' }; /**< sensor name > **/
+    time_t time; /**< sensor timestamp > **/
+    double value; /**< sensor value > **/
 } Sensor_t;
 
 // Vector list of sensors
@@ -68,7 +70,7 @@ typedef std::vector<Sensor_t> SensorsList_t;
 typedef std::vector<SensorsList_t> FusionList_t;
 
 //map to validate if sensor is stuck or not
-typedef std::map<string, SensorStuckInfo_t> StuckOrNotList_t;
+typedef std::map<string, SensorStateInfo> ValidationList_t;
 
 
 time_t make_time(const char *time);
@@ -77,5 +79,7 @@ char* get_field(const char *line,
                int num);
 
 int are_digits(const char *string);
+
+void print_time(time_t time);
 
 #endif /* SF_COMMON_HPP_ */

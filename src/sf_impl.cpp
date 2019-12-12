@@ -1,6 +1,6 @@
-/*
- * sf_impl.cpp
- *
+
+/** @file sf_impl.cpp
+ *  @brief contains the implementations of the sensor fusion functions
  */
 
 // All C++ Headers
@@ -53,8 +53,10 @@ int parse_file(char *file_name,
         int count = 0;
         SensorsList_t sensorList;
         FusionList_t fusionList;
-        StuckOrNotList_t sutckornotlist;
+        ValidationList_t validationList;
 
+        //TODO: if invalid line.. print invalid data and continue;
+        // at the end print the number of ignored data; maybe also print the line number in file.
         while (fgets(line, 1024, file))
         {
             count++;
@@ -65,41 +67,54 @@ int parse_file(char *file_name,
                 sensor = create_sensor_from_line(sensorInfo);
                 if (!sensorList.empty())
                 {
-                    //Handle stuckornot list
-                    auto it = sutckornotlist.find(sensor.name);
+                    /**
+                     * Handle validation list here.
+                     * Validation list will be used to check if a sensor is stuck or not.
+                     */
+                    auto it = validationList.find(sensor.name);
 
-                    if (it != sutckornotlist.end())
+                    if (it != validationList.end())
                     {
-                        printf("sensor: %s found with value %f\n",
+
+                        /**
+                         * if the sensor is found, we push the new data to the SensorDataList_t
+                         */
+
+                        printf("\nsensor: %s found with value %.0f\n",
                                sensor.name,
                                sensor.value);
 
                         it->second.data.push_back(make_pair(sensor.time,
                                                             sensor.value));
-//                        char time_buffer[100];
-//                        strftime(time_buffer,
-//                                 sizeof(time_buffer),
-//                                 "Time in sensor data is %H:%M\n",
-//                                 localtime(&sensor.time));
-//
-//                        printf(time_buffer);
                     }
                     else
                     {
+
+                        /**
+                         * if the sensor is not found found:
+                         *  - A SensorDataList_t is created and pushed to data in SensorState_Info_t
+                         *  - SensorStateInfo_t is created and pushed into the ValidationList_t
+                         */
+
                         SensorDataList_t dataList;
-                        SensorStuckInfo_t sensorInfo;
-                        printf("sensor: %s not found. Adding to stuckornot\n",
+                        SensorStateInfo_t sensorInfo;
+                        printf("sensor: %s not found. Adding new sensor..\n",
                                sensor.name);
 
                         dataList.push_back(make_pair(sensor.time,
                                                      sensor.value));
 
                         sensorInfo.data = dataList;
-                        sutckornotlist.insert(make_pair(sensor.name,
+                        validationList.insert(make_pair(sensor.name,
                                                         sensorInfo));
                     }
 
-                    // handle sensor fusion lists
+                    /**
+                     * Handle sensor fusion lists here.
+                     * Multiple Sensor lists (SensorsList_t) are created.
+                     * Sensor fusion will be performed on each SensorList_t
+                     *
+                     */
                     int compare_status =
                             compare_sensors_times(&sensorList[0],
                                                   &sensor,
@@ -108,12 +123,11 @@ int parse_file(char *file_name,
                     if (APPEND == compare_status)
                     {
                         sensorList.push_back(sensor);
-                        //TODO: should we check for duplicates?
-                        // How do we bloody handle them?
+                        //TODO: should we check for duplicate sensors?
                     }
                     else
                     {
-                        // push the sensor to the Fusion List
+                        // push the Sensor List to the Fusion List
                         fusionList.push_back(sensorList);
                         // Clear it to start a new sensorList
                         sensorList.clear();
@@ -121,21 +135,21 @@ int parse_file(char *file_name,
                         sensorList.push_back(sensor);
                     }
                 }
-                else
+                else // sensorList.empty()
                 {
-                    printf("Brand new list, adding sensor\n");
+                    printf("New Sensor list, adding sensor\n");
                     sensorList.push_back(sensor);
 
                     SensorDataList_t dataList;
-                    SensorStuckInfo_t sensorInfo;
-                    printf("sensor: %s not found. Adding to stuckornot\n",
+                    SensorStateInfo_t sensorInfo;
+                    printf("sensor: %s not found. Adding to SensorStateInfo_t\n",
                            sensor.name);
 
                     dataList.push_back(make_pair(sensor.time,
                                                  sensor.value));
 
                     sensorInfo.data = dataList;
-                    sutckornotlist.insert(make_pair(sensor.name,
+                    validationList.insert(make_pair(sensor.name,
                                                     sensorInfo));
                 }
                 free(sensorInfo);
@@ -143,7 +157,8 @@ int parse_file(char *file_name,
         }
         fclose(file);
 
-        check_sensor_stuck(&sutckornotlist,
+        // checking if any sensors are stuck
+        check_sensor_stuck(&validationList,
                            sensor_stuck_interval_minutes);
     }
 
@@ -152,6 +167,7 @@ int parse_file(char *file_name,
 
 int validate_interval(const char *string)
 {
+    //TODO: accept different range for fusion and for stuck
     int value = atoi(string);
     if (!(0 <= value && value < 60))
     {
@@ -161,7 +177,7 @@ int validate_interval(const char *string)
     return value;
 }
 
-void check_sensor_stuck(StuckOrNotList_t *list,
+void check_sensor_stuck(ValidationList_t *list,
                         int interval)
 {
     double diff_in_seconds = 0;
@@ -211,7 +227,7 @@ int compare_sensors_times(Sensor_t *sensor,
     diff_in_seconds = difftime(sensor2->time,
                                sensor->time);
 
-    printf("diff in seconds? %f\n", diff_in_seconds);
+    printf("diff in minutes? %.0f\n", diff_in_seconds / 60);
 
     if ((diff_in_seconds / 60) > interval)
     {

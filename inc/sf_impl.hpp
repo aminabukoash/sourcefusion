@@ -1,3 +1,4 @@
+
 /** @file sf_impl.hpp
  * Contains the declarations for the sensor fusion implementation
  */
@@ -41,7 +42,7 @@ int parse_file(char *file_name,
 
 int validate_interval(const char *string);
 
-void check_sensor_stuck(StuckOrNotList_t *list,
+void check_sensor_stuck(ValidationList_t *list,
                         int interval);
 
 int compare_sensors_times(Sensor_t *sensor,

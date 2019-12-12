@@ -1,3 +1,8 @@
+
+/** @file sf_impl.cpp
+ *  @brief contains the common functions used in the sensor fusion project.
+ */
+
 // All C++ Headers
 #include "../inc/sf_common.hpp"
 
@@ -49,15 +54,7 @@ time_t make_time(const char *time)
     {
         printf("unable to make time\n");
     }
-    else
-    {
-        char time_buffer[100];
-        strftime(time_buffer,
-                 sizeof(time_buffer),
-                 "%H:%M\n",
-                 &tm);
-        printf(time_buffer);
-    }
+
     return time_value;
 }
 
@@ -104,3 +101,13 @@ int are_digits(const char *string)
     return 0;
 }
 
+void print_time(time_t time)
+{
+    char time_buffer[100];
+    strftime(time_buffer,
+             sizeof(time_buffer),
+             "Time is %H:%M\n",
+             localtime(&time));
+
+    printf(time_buffer);
+}

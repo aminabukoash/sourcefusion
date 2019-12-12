@@ -1,3 +1,8 @@
+
+/** @file fusion_algorithm.cpp
+ *  @brief contains the implementation of the sensor fusion algorithm
+ */
+
 // All C++ Headers
 #include "../inc/sf_common.hpp"
 
