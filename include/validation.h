@@ -2,8 +2,8 @@
  * Contains the declarations for the input validation functions.
  */
 
-#ifndef VALIDATION_H_
-#define VALIDATION_H_
+#ifndef __VALIDATION_H__
+#define __VALIDATION_H__
 
 /**
  * Validate the values of sensors at all times to make sure they're not stuck.
@@ -20,4 +20,4 @@ void validate_times(float** sensor_values);
  */
 void validate_values(float tolerance, float** sensor_values);
 
-#endif /* VALIDATION_H_ */
+#endif /* __VALIDATION_H__ */

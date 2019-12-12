@@ -2,9 +2,20 @@
  * Contains the declarations for the file input/output functions.
  */
 
-#ifndef SENSOR_IO_H_
-#define SENSOR_IO_H_
+#ifndef __SENSOR_IO_H__
+#define __SENSOR_IO_H__
 
+
+struct sensor_data {
+    char sensor_name[20];
+    float value;
+};
+
+struct sensor{
+    char time[7];
+    struct sensor_data* data;
+    int size;
+};
 /**
  * Output a given string to a text file.
  * @param filename The name of the output file.
@@ -19,6 +30,6 @@ int output_file(char* filename, char* content);
  * @return A matrix with all sensor values. Each row represents all sensor values at
  * a specific timestamp.
  */
-float** parse_input(char* filename);
+struct sensor* parse_input(char* filename, int n);
 
-#endif /* SENSOR_IO_H_ */
+#endif /* __SENSOR_IO_H__ */
