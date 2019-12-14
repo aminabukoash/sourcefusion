@@ -44,6 +44,13 @@ double *vector_scalar_multiply(double *vector, int vector_size, double scalar);
  */
 double vector_vector_multiply(double *vector1, double *vector2, int vector_size);
 
+/**
+ *  Helper function - Removes a sensor from the list by it's name..
+ * @param sensors The sensors list vector.
+ * @param name The name of the sensor to be removed.
+ * @return the modified sesnsor list.
+ */
+SensorsList_t remove_sensor_by_name(SensorsList_t sensors, char* name);
 
 /**
  *  Calculate the support degree matrix.
@@ -72,6 +79,7 @@ double* get_principal_components(double* eignvalues, double** eignvectors);
 /**
  *  Calculate the contribution rates of the individual principal components.
  * @param principal_components The principal components of the support degree matrix.
+ * @param number_of_sensors The total sensor count.
  * @return The individual contribution rates of the principal components.
  */
 double* get_contribution_rates(double* principal_components, int number_of_sensors);
@@ -79,17 +87,29 @@ double* get_contribution_rates(double* principal_components, int number_of_senso
 /**
  *  Calculate the cumulative contribution rates up to the m principal component.
  * @param contribution_rates The individual contribution rates of the principal components.
+ * @param number_of_sensors The total sensor count.
+ * @param p The contribution parameter p.
  * @return The cumulative contribution rates up to the m principal component.
  */
-double* get_cumulative_contributions(double* contribution_rates, int number_of_sensors);
+double* get_cumulative_contributions(double* contribution_rates, int number_of_sensors, float p);
 
 /**
  * Compute the integrated support degree score for all sensors.
  * @param principal_components The principal components of the support degree matrix.
  * @param contribution_rates The individual contribution rates of the principal components.
+ * @param number_of_sensors The total sensor count.
  * @return The integrated support degree score for all sensors.
  */
 double* get_integrated_support_score(double** principal_components, double* contribution_rates, int number_of_sensors);
+
+/**
+ *  Remove sensors from the list that are not supported by q% of the sensors.
+ * @param sensors The sensors list vector.
+ * @param integrated_scores  The integrated support degree score for all sensors.
+ * @param tolerance The fault tolerance value..
+ * @return the modified sensor list without faulty sensors.
+ */
+SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list, double *integrated_scores, float tolerance);
 
 /**
  *  Compute the weight coefficient for each sensor.
