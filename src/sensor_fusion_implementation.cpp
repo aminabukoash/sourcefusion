@@ -4,7 +4,7 @@
  */
 
 // All C++ Headers
-#include "../inc/sf_impl.hpp"
+#include "../inc/sensor_fusion_implementation.hpp"
 
 #ifdef __cplusplus
 extern "C" {

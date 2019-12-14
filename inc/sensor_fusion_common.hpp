@@ -42,8 +42,7 @@ using namespace std;
 typedef std::vector<std::pair<time_t, double>> SensorDataList_t;
 
 // sensor status enum
-typedef enum SensorStatus
-{
+typedef enum SensorStatus {
     SENSOR_STATUS_STUCK = 0,
     SENSOR_STATUS_ON,
     SENSOR_STATUS_UNKNOWN
@@ -51,16 +50,14 @@ typedef enum SensorStatus
 } SensorStatus_t;
 
 // Sensor state Information structure, this structure hold the Sensor Status Information
-typedef struct SensorStateInfo
-{
-    SensorStatus_t status = { SensorStatus_t::SENSOR_STATUS_UNKNOWN }; /**< sensor status*/
+typedef struct SensorStateInfo {
+    SensorStatus_t status = {SensorStatus_t::SENSOR_STATUS_UNKNOWN}; /**< sensor status*/
     SensorDataList_t data; /**< sensor data vector*/
 } SensorStateInfo_t;
 
 // Sensor structure
-typedef struct Sensor
-{
-    char name[SENSOR_MAX_NAME_LEN] = { '\0' }; /**< sensor name > **/
+typedef struct Sensor {
+    char name[SENSOR_MAX_NAME_LEN] = {'\0'}; /**< sensor name > **/
     time_t time; /**< sensor timestamp > **/
     double value; /**< sensor value > **/
 } Sensor_t;
@@ -78,8 +75,8 @@ typedef std::map<string, SensorStateInfo> ValidationList_t;
 
 time_t make_time(const char *time);
 
-char* get_field(const char *line,
-               int num);
+char *get_field(const char *line,
+                int num);
 
 int are_digits(const char *string);
 

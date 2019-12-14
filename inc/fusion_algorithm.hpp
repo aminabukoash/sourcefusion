@@ -7,7 +7,7 @@
 #define FUSION_ALGORITHM_HPP_
 
 // All C++ Headers
-#include "../inc/sf_common.hpp"
+#include "sensor_fusion_common.hpp"
 
 #ifdef __cplusplus
 extern "C" {
