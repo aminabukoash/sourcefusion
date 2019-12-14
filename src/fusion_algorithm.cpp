@@ -52,8 +52,7 @@ double *get_degree_matrix(SensorsList_t sensors_list) {
     return degree_matrix;
 }
 
-void
-get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors, double *eigenvalues, double **eigenvectors) {
+void get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors, double *eigenvalues, double **eigenvectors) {
 
 
     gsl_matrix_view m = gsl_matrix_view_array(degree_matrix, number_of_sensors, number_of_sensors);
@@ -157,5 +156,13 @@ double* get_weight_coefficients(double* integrated_scores, int number_of_sensors
 }
 
 double get_fused_output(SensorsList_t sensors_list, double* weight_coefficients){
+    double fused_output = 0.0;
+    int number_of_sensors = sensors_list.size();
+
+    for (int i = 0; i < number_of_sensors; ++i) {
+        fused_output += sensors_list[i].value * weight_coefficients[i];
+    }
+
+    return fused_output;
 
 }
