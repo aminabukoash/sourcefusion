@@ -139,10 +139,23 @@ double *get_integrated_support_score(double **principal_components,
     return integrated_scores;
 }
 
-//double* get_weight_coefficients(double* integrated_scores){
-//
-//}
-//
-//double get_fused_output(double* sensor_values, double* weight_coefficients){
-//
-//}
+double* get_weight_coefficients(double* integrated_scores, int number_of_sensors){
+
+    double scores_sum = 0.0;
+    double * weight_coefficients = (double*)malloc(number_of_sensors * sizeof(double));
+
+    for (int i = 0; i < number_of_sensors; ++i) {
+        scores_sum += integrated_scores[i];
+    }
+
+    for (int i = 0; i < number_of_sensors; ++i){
+        weight_coefficients[i] = integrated_scores[i]/scores_sum;
+    }
+
+    return weight_coefficients;
+
+}
+
+double get_fused_output(SensorsList_t sensors_list, double* weight_coefficients){
+
+}

@@ -10,6 +10,9 @@ else
        ifeq ($(UNAME_S),Darwin)
        		INCLUDES=-I"inc" -I/usr/local/Cellar/gsl/2.6/include
        endif
+       ifeq ($(UNAME_S),Linux)
+       		INCLUDES=-I"inc" -I/usr/include/gsl
+       endif
 endif
 
 
@@ -21,6 +24,10 @@ else
        ifeq ($(UNAME_S),Darwin)
        		LFLAGS=-L/usr/local/Cellar/gsl/2.6/lib
        endif
+
+      ifeq ($(UNAME_S),Linux)
+            LFLAGS=-L/usr/lib
+      endif
 endif
 
 LIBS=-lgsl -lgslcblas -lm

@@ -96,7 +96,7 @@ double* get_integrated_support_score(double** principal_components, double* cont
  * @param integrated_scores The integrated support degree score for all sensors.
  * @return The weight coefficient for each sensor.
  */
-double* get_weight_coefficients(double* integrated_scores);
+double* get_weight_coefficients(double* integrated_scores, int number_of_sensors);
 
 /**
  *  Compute the fused output for all sensors.
@@ -104,7 +104,7 @@ double* get_weight_coefficients(double* integrated_scores);
  * @param weight_coefficients the weight coefficient for each sensor
  * @return The fused output for all sensors.
  */
-double get_fused_output(double* sensor_values, double* weight_coefficients);
+double get_fused_output(SensorsList_t sensors_list, double* weight_coefficients);
 
 
 #endif /* FUSION_ALGORITHM_HPP_ */
