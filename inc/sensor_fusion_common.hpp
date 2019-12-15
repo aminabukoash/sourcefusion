@@ -24,6 +24,7 @@ extern "C" {
 #include <math.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
+#include <gsl/gsl_blas.h>
 
 #ifdef __cplusplus
 }

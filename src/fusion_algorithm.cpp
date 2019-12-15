@@ -16,7 +16,6 @@ extern "C" {
 }
 #endif
 
-
 void vector_add(double *dest, double *src, int vector_size) {
     for (int i = 0; i < vector_size; ++i) {
         dest[i] += src[i];
@@ -47,6 +46,12 @@ SensorsList_t remove_sensor_by_name(SensorsList_t sensors, char name[SENSOR_MAX_
     return sensors;
 }
 
+void delete_element_from_double_array(double* array, int index, int size){
+    for (int i = index; i < size-1; ++i) {
+        array[i] = array[i+1];
+    }
+}
+
 double *get_degree_matrix(SensorsList_t sensors_list) {
     int number_of_sensors = sensors_list.size();
     double *degree_matrix = (double *) malloc(number_of_sensors * number_of_sensors * sizeof(double));
@@ -61,8 +66,8 @@ double *get_degree_matrix(SensorsList_t sensors_list) {
     return degree_matrix;
 }
 
-void
-get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors, double *eigenvalues, double **eigenvectors) {
+void get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors,
+        double *eigenvalues, double **eigenvectors) {
 
 
     gsl_matrix_view m = gsl_matrix_view_array(degree_matrix, number_of_sensors, number_of_sensors);
@@ -76,7 +81,7 @@ get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors, double
 
     gsl_eigen_symmv_free(w);
 
-    gsl_eigen_symmv_sort(eval, evec, GSL_EIGEN_SORT_ABS_ASC);
+    gsl_eigen_symmv_sort(eval, evec, GSL_EIGEN_SORT_VAL_DESC);
 
 
     for (int i = 0; i < number_of_sensors; i++) {
@@ -97,52 +102,98 @@ get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors, double
 }
 
 
-double *get_principal_components(double *eignvalues, double **eignvectors, int number_of_sensors) {
+double **get_principal_components(double *degree_matrix, double **eignvectors, int number_of_sensors) {
 
-    double *principal_components = (double *) malloc(number_of_sensors * sizeof(double));
+    double **principal_components = (double **) malloc(number_of_sensors * sizeof(double*));
+    for(int i=0;i<number_of_sensors;i++){
+        principal_components[i]=(double *)malloc(number_of_sensors * sizeof(double));
+    }
+    double **degree_matrix_2d = (double **) malloc(number_of_sensors * sizeof(double*));
 
-    for (int i = 0; i < number_of_sensors; ++i) {
-        principal_components[i] = vector_vector_multiply(eignvalues, eignvectors[i], number_of_sensors);
+    int index =0;
+    for (int k = 0; k < number_of_sensors; ++k) {
+        double * row = (double*)calloc(number_of_sensors, sizeof(double));
+        for (int i = 0; i < number_of_sensors; ++i) {
+            row[i] = degree_matrix[index];
+            index++;
+        }
+        degree_matrix_2d[k] = row;
+    }
+
+
+    gsl_matrix *p_eigen_vec=gsl_matrix_alloc(number_of_sensors,number_of_sensors);
+    gsl_matrix *p_support_degree=gsl_matrix_alloc(number_of_sensors,number_of_sensors);
+    gsl_matrix *p_y=gsl_matrix_alloc(number_of_sensors,number_of_sensors);
+
+
+    for(int i=0;i<number_of_sensors;i++){
+        for(int j=0;j<number_of_sensors;j++)
+        {
+            gsl_matrix_set(p_eigen_vec,i,j,eignvectors[i][j]);
+            gsl_matrix_set(p_support_degree,i,j,degree_matrix_2d[i][j]);
+            gsl_matrix_set(p_y,i,j,0.0);
+        }
+    }
+
+
+    gsl_blas_dgemm (CblasNoTrans, CblasNoTrans,
+                    1.0, p_eigen_vec,p_support_degree,
+                    0.0, p_y);
+
+
+    for(int rows=0;rows<number_of_sensors;rows++){
+        for(int cols=0;cols<number_of_sensors;cols++)
+        {
+            principal_components[rows][cols]=gsl_matrix_get(p_y,rows,cols);
+        }
     }
     return principal_components;
 }
 
-double *get_contribution_rates(double *eignvalues,
+double *get_contribution_rates(double *eigenvalues,
                                int number_of_sensors) {
     double *contribution_rates = (double *) malloc(number_of_sensors
                                                    * sizeof(double));
     double eignvalue_sum = 0.0;
     for (int i = 0; i < number_of_sensors; ++i) {
-        eignvalue_sum += eignvalues[i];
+        double val = eigenvalues[i];
+        eignvalue_sum += eigenvalues[i];
     }
     for (int i = 0; i < number_of_sensors; ++i) {
-        contribution_rates[i] = eignvalues[i] / eignvalue_sum;
+        contribution_rates[i] = eigenvalues[i] / eignvalue_sum;
+        printf("contrib: %f\n", contribution_rates[i]);
     }
     return contribution_rates;
 }
 
-double *get_cumulative_contributions(double *contribution_rates,
-                                     int number_of_sensors) {
-    double *cumulative_contributions = (double *) malloc(number_of_sensors
-                                                         * sizeof(double));
+
+
+int select_contribution_rate(double *contribution_rates, int number_of_sensors, float p) {
+    double *cumulative_contributions = (double *) malloc(number_of_sensors * sizeof(double));
+
     for (int i = 0; i < number_of_sensors; ++i) {
         cumulative_contributions[i] = 0.0;
         for (int j = 0; j <= i; ++j) {
             cumulative_contributions[i] += contribution_rates[j];
         }
     }
-    return cumulative_contributions;
+
+    for (int k = 0; k < number_of_sensors; ++k) {
+        if (cumulative_contributions[k] > p) {
+            return k +1;
+        }
+    }
+
 }
 
-double *get_integrated_support_score(double **principal_components, double *contribution_rates, int number_of_sensors) {
-    double *integrated_scores = (double *) malloc(number_of_sensors
-                                                  * sizeof(double));
-    for (int i = 0; i < number_of_sensors; ++i) {
-        double *score = vector_scalar_multiply(principal_components[i],
-                                               number_of_sensors,
-                                               contribution_rates[i]);
-        vector_add(integrated_scores, score, number_of_sensors);
+double *get_integrated_support_scores(double** principal_components, double *contribution_rates, int number_of_sensors, int m) {
+    double *integrated_scores = (double *) calloc(number_of_sensors , sizeof(double));
+
+    for (int i = 0; i < m; ++i) {
+
+        vector_add(integrated_scores, vector_scalar_multiply(principal_components[i],number_of_sensors,contribution_rates[i]), number_of_sensors);
     }
+
     return integrated_scores;
 }
 
@@ -151,20 +202,24 @@ SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list, double *integ
     double threshold_value;
     double scores_sum = 0.0;
     int number_of_sensors = sensors_list.size();
-    char sensors_to_be_deleted[sensors_list.size()][SENSOR_MAX_NAME_LEN];
+    char sensors_to_be_deleted_names[number_of_sensors][SENSOR_MAX_NAME_LEN];
+    int sensors_to_be_deleted_indices[number_of_sensors];
     int deleted_count = 0;
 
     threshold_value = abs((scores_sum / number_of_sensors) * tolerance);
 
     for (int j = 0; j < number_of_sensors; ++j) {
         if (abs(integrated_scores[j]) < threshold_value) {
-            strncpy(sensors_to_be_deleted[deleted_count], sensors_list[j].name, SENSOR_MAX_NAME_LEN);
+            sensors_to_be_deleted_indices[deleted_count] = j;
+            strncpy(sensors_to_be_deleted_names[deleted_count], sensors_list[j].name, SENSOR_MAX_NAME_LEN);
             deleted_count++;
         }
     }
 
     for (int k = 0; k < deleted_count; ++k) {
-        sensors_list = remove_sensor_by_name(sensors_list, sensors_to_be_deleted[k]);
+        delete_element_from_double_array(integrated_scores,sensors_to_be_deleted_indices[k] - k, number_of_sensors);
+        sensors_list = remove_sensor_by_name(sensors_list, sensors_to_be_deleted_names[k]);
+        number_of_sensors--;
     }
 
     return sensors_list;
@@ -195,4 +250,31 @@ double get_fused_output(SensorsList_t sensors_list, double *weight_coefficients)
     }
 
     return fused_output;
+}
+
+double perform_sensor_fusion(SensorsList_t sensors, float p, float tolerance) {
+
+    int number_of_sensors = sensors.size();
+
+    double *degree_matrix = get_degree_matrix(sensors);
+
+    double **eigenvectors = (double **) malloc(number_of_sensors * sizeof(double *));
+    double *eigenvalues = (double *) malloc(number_of_sensors * sizeof(double));
+
+    get_eigenvalues_and_vectors(degree_matrix, number_of_sensors, eigenvalues, eigenvectors);
+
+    double **principal_components = get_principal_components(eigenvalues, eigenvectors, number_of_sensors);
+
+    double *contribution_rates = get_contribution_rates(eigenvalues, number_of_sensors);
+
+    int m = select_contribution_rate(contribution_rates, number_of_sensors, p);
+
+    double* integrated_support_scores = get_integrated_support_scores(principal_components, contribution_rates, number_of_sensors, m);
+
+    eliminate_incorrect_data(sensors,integrated_support_scores, tolerance);
+
+    double* weight_coefficients = get_weight_coefficients(integrated_support_scores, sensors.size());
+
+    return get_fused_output(sensors, weight_coefficients);
+
 }
