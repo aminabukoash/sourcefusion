@@ -32,6 +32,8 @@ Sensor_t create_sensor_from_line(char *sensorInfo)
 }
 
 int parse_file(char *file_name,
+               float contribution_p,
+               float tolerance,
                int sensor_stuck_interval_minutes,
                int fusion_interval_minutes)
 {
@@ -254,11 +256,5 @@ int output_file(char *filename,
 {
     //TODO: Implement this
     return 0;
-}
-
-void validate_values(float tolerance,
-                     float **sensor_values)
-{
-    //TODO: Implement this
 }
 
