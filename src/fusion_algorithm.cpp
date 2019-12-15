@@ -276,6 +276,16 @@ double perform_sensor_fusion(SensorsList_t sensors, float p, float tolerance) {
     double *weight_coefficients = get_weight_coefficients(integrated_support_scores,
             sensors.size());
 
-    return get_fused_output(sensors, weight_coefficients);
+    double fused_output = get_fused_output(sensors, weight_coefficients);
+
+    free(degree_matrix);
+    free(eigenvectors);
+    free(eigenvalues);
+    free(principal_components);
+    free(contribution_rates);
+    free(integrated_support_scores);
+    free(weight_coefficients);
+
+    return fused_output;
 
 }

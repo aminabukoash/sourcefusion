@@ -20,151 +20,78 @@ extern "C" {
 #endif
 
 void print_usage() {
-//TODO: fill this
-
+    printf("Usage: filename contribution_p tolerance stuck_interval fusion_interval\n");
+    printf("\n");
+    printf("  filename              : The name of the file with the input values. (required)\n");
+    printf("  contribution_p        : The p parameter used in contribution rate selection.\n");
+    printf("  tolerance             : The tolerance ratio used in fault tolerance elimination process.\n");
+    printf("  stuck_interval        : The minimum interval where if a sensor doesn't change value it's considered stuck. (default = 10)\n");
+    printf("  fusion_interval       : The maximum interval where sensor values are fused. (default = 2)\n");
+    printf("\n");
+    exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[]) {
+    setbuf(stdout, NULL);
+    printf("Program Name: %s\n", argv[0]);
+    printf("Number of arguments: %d\n", argc);
+    //TODO: ask user to provide column data in file
 
-    SensorsList_t list;
-
-    Sensor_t sensor = {.value=49, .time=make_time("12:00"), .name = "sens1"};
-    Sensor_t sensor2 = {.value=54.7, .time=make_time("12:00"), .name = "sens2"};
-    Sensor_t sensor3 = {.value=53.2, .time=make_time("12:00"), .name = "sens3"};
-    Sensor_t sensor4 = {.value=54, .time=make_time("12:00"), .name = "sens4"};
-    Sensor_t sensor5 = {.value=52.6, .time=make_time("12:00"), .name = "sens5"};
-//    Sensor_t sensor6 = {.value=53.2, .time=make_time("12:00"), .name = "sens6"};
-//    Sensor_t sensor7 = {.value=53.3, .time=make_time("12:00"), .name = "sens7"};
-//    Sensor_t sensor8 = {.value=52.5, .time=make_time("12:00"), .name = "sens8"};
+    int ret = 0;
+    char *filename;
+    float contribution_p = 0.85, tolerance = 0.7;
+    int stuck_interval = 10, fusion_interval = 2;
 
 
-    list.push_back(sensor);
-    list.push_back(sensor2);
-    list.push_back(sensor3);
-    list.push_back(sensor4);
-    list.push_back(sensor5);
-//    list.push_back(sensor6);
-//    list.push_back(sensor7);
-//    list.push_back(sensor8);
+    /**
+     * Usage: filename contribution_p tolerance stuck_interval fusion_interval.
+     *   filename              : The name of the file with the input values. (required)
+     *   contribution_p        : The p parameter used in contribution rate selection. Default = 0.85.
+     *   tolerance             : The tolerance ratio used in fault tolerance elimination process. Default = 0.7.
+     *   stuck_interval        : The minimum interval where if a sensor doesn't change value it's considered stuck.
+     *                          Acceptable range is from 0 to 59 minutes. Default = 10.
+     *   fusion_interval       : The maximum interval where sensor values are fused. Default = 2.
+     */
 
-    double fused = perform_sensor_fusion(list, 0.85, 0.7);
+    if (argc == 1) {
+        print_usage();
+        return 0;
+    }else if(argc > 6){
+        printf("Incorrect number of arguments\n");
+        print_usage();
+        return 0;
+    }
 
-    printf("%f", fused);
+    if (argc >= 2) {
+        filename = argv[1];
+    }
+    if (argc >= 3) {
+        contribution_p = atoi(argv[2]);
+    }
+    if (argc >= 4) {
+        tolerance = atoi(argv[3]);
+    }
+    if (argc >= 5) {
+        if (are_digits(argv[4]) == 0) {
 
+            int sensor_stuck_interval = validate_interval(argv[4]);
 
+            if (-1 != sensor_stuck_interval) {
+                stuck_interval = sensor_stuck_interval;
+            }
+        }
+    }
+    if (argc == 6) {
+        if (are_digits(argv[5]) == 0) {
 
-//    double x[5] = {0.8, 0.4, 0.86, 0.5, 0.95};
-//    double x = {4.8, 3.4, 2.8, 1.5, 0.5};
-//
-//    double* contribution_rates = {0.8, 0.4, 0.86, 0.5, 0.95};
-//    double* principal_components = {4.8, 3.4, 2.8, 1.5, 0.5};
-//
-//    int number_of_sensors = list.size();
-//
-//    int rates_to_be_deleted_indices[number_of_sensors];
-//    int deleted_count = select_contribution_rate(rates_to_be_deleted_indices, contribution_rates, number_of_sensors, 0.85);
-//
-//    for (int i = 0; i < deleted_count; ++i) {
-//        delete_element_from_double_array(principal_components, rates_to_be_deleted_indices[i]-i, number_of_sensors);
-//        list.erase(list.begin()+rates_to_be_deleted_indices[i]-i);
-//        number_of_sensors--;
-//    }
+            int sensor_fusion_interval = validate_interval(argv[5]);
 
+            if (sensor_fusion_interval != -1) {
+                fusion_interval = sensor_fusion_interval;
+            }
+        }
+    }
 
-
-//    double * res = get_degree_matrix(list);
-//
-//    printf("Printing Support Degree Matrix");
-//    for (int i = 0; i < 9; ++i) {
-//        count++;
-//        printf("res: %f\n,", res[i]);
-//    }
-//
-//    double ** vector = (double**) malloc(3*sizeof(double*));
-//    double * values = (double*) malloc(3*sizeof(double));
-//
-//    get_eigenvalues_and_vectors(res, 3, values, vector);
-//
-//    for (int i = 0; i < 3; ++i) {
-//            count++;
-//            printf("%f\n,", values[i]);
-//    }
-//
-//    printf("Printing Weights\n");
-//
-//    double inti[5] = {1.0, 1.0, 1.0, 1.0, 1.0};
-//    double * coff = get_weight_coefficients(inti, 5);
-//    for (int i = 0; i < 5; ++i) {
-//        printf("weights: %f\n", coff[i]);
-//    }
-//
-//
-//    printf("The count is: %d", count);
-
-//    setbuf(stdout, NULL);
-//    printf("Program Name: %s\n", argv[0]);
-//    printf("Number of arguments: %d\n", argc);
-//    //TODO: ask user to provide column data in file
-//
-//    int ret = 0;
-//
-//    if (1 == argc) {
-//        print_usage();
-//        return 0;
-//    } else if (2 == argc) {
-//        /**
-//         *         argv[1] is assumed to be a filename to open.
-//         *         If only the file name is provided default values will be used:
-//         *
-//         *         sensos_stuck_interval default is: 10 minutes
-//         *         fusion_interval_minutes default is: 2 minutes
-//         */
-//        ret = parse_file(argv[1]);
-//        return ret;
-//    } else if (3 == argc) {
-//        /**
-//         *         argv[2] is assumed to be a elapsed time to determine if a sensor is stuck.
-//         *         argv[2] is validated to check if the values entered are digits.
-//         *         argv[2] is validated if it is within range (0 to 59 minutes).
-//         *         fusion_interval_minutes default value is used here: 2 minutes
-//         */
-//
-//        if (0 == are_digits(argv[2])) {
-//
-//            int sensos_stuck_interval = validate_interval(argv[2]);
-//
-//            if (-1 != sensos_stuck_interval) {
-//
-//                ret = parse_file(argv[1], sensos_stuck_interval);
-//                return ret;
-//            }
-//        }
-//
-//    } else if (4 == argc) {
-//        /**
-//         *         argv[2] is assumed to be a elapsed time (in minutes) to determine if a sensor is stuck
-//         *         argv[3] is a tolerance range (in minutes) to fuse sensors within that range
-//         *
-//         *         argv[2] and argv[3] are validated to check if the values entered are digits
-//         *         argv[2] and argv[3] are validated if it is within range (0 to 59 minutes).
-//         */
-//
-//        if (0 == are_digits(argv[2]) && 0 == are_digits(argv[3])) {
-//
-//            int sensos_stuck_interval = validate_interval(argv[2]);
-//            int fusion_interval = validate_interval(argv[3]);
-//
-//            if (-1 != fusion_interval && -1 != sensos_stuck_interval) {
-//
-//                ret = parse_file(argv[1], sensos_stuck_interval, fusion_interval);
-//                return ret;
-//            }
-//        }
-//    } else {
-//
-//        printf("Incorrect number of arguments\n");
-//        print_usage();
-//    }
-    return 0;
-
+    ret = parse_file(filename, contribution_p, tolerance, stuck_interval, fusion_interval);
+    return ret;
 }
