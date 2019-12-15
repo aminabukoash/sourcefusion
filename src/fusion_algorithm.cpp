@@ -195,32 +195,61 @@ double *get_integrated_support_scores(double **principal_components,
 
 
 SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list, double *integrated_scores, float tolerance) {
-    double threshold_value;
-    double scores_sum = 0.0;
-    int number_of_sensors = sensors_list.size();
-    char sensors_to_be_deleted_names[number_of_sensors][SENSOR_MAX_NAME_LEN];
-    int sensors_to_be_deleted_indices[number_of_sensors];
-    int deleted_count = 0;
 
-    threshold_value = fabs((scores_sum / number_of_sensors) * tolerance);
+    double sum = 0.0;
+    int number_of_sensors = sensors_list.size();
+
+    int* index_to_be_deleted = (int*)calloc(number_of_sensors,sizeof(int));
+
+    for (int i = 0; i < number_of_sensors; ++i) {
+        sum+=integrated_scores[i];
+    }
+
+    double value_to_compare = fabs(sum/number_of_sensors) * tolerance;
 
     for (int j = 0; j < number_of_sensors; ++j) {
-        if (fabs(integrated_scores[j]) < threshold_value) {
-            sensors_to_be_deleted_indices[deleted_count] = j;
-            strncpy(sensors_to_be_deleted_names[deleted_count],
-                    sensors_list[j].name, SENSOR_MAX_NAME_LEN);
-            deleted_count++;
+        if (fabs(integrated_scores[j]) < value_to_compare){
+            index_to_be_deleted[j] = 1;
         }
     }
 
-    for (int k = 0; k < deleted_count; ++k) {
-        delete_element_from_double_array(integrated_scores,sensors_to_be_deleted_indices[k] - k,
-                                         number_of_sensors);
-        sensors_list = remove_sensor_by_name(sensors_list, sensors_to_be_deleted_names[k]);
-        number_of_sensors--;
+    SensorsList_t reduced_list;
+
+
+    for (int k = 0; k < number_of_sensors; ++k) {
+        if (index_to_be_deleted[k] == 0){
+            reduced_list.push_back(sensors_list.at(k));
+        }
     }
 
-    return sensors_list;
+    return reduced_list;
+
+//    double threshold_value;
+//    double scores_sum = 0.0;
+//    int number_of_sensors = sensors_list.size();
+//    char sensors_to_be_deleted_names[number_of_sensors][SENSOR_MAX_NAME_LEN];
+//    int sensors_to_be_deleted_indices[number_of_sensors];
+//    int deleted_count = 0;
+//
+//    threshold_value = fabs((scores_sum / number_of_sensors) * tolerance);
+//
+//    for (int j = 0; j < number_of_sensors; ++j) {
+//        if (fabs(integrated_scores[j]) < threshold_value) {
+//            sensors_to_be_deleted_indices[deleted_count] = j;
+//            strncpy(sensors_to_be_deleted_names[deleted_count],
+//                    sensors_list[j].name, SENSOR_MAX_NAME_LEN);
+//            deleted_count++;
+//        }
+//    }
+//
+//    for (int k = 0; k < deleted_count; ++k) {
+//        delete_element_from_double_array(integrated_scores,sensors_to_be_deleted_indices[k] - k,
+//                                         number_of_sensors);
+//        sensors_list = remove_sensor_by_name(sensors_list, sensors_to_be_deleted_names[k]);
+//        number_of_sensors--;
+//    }
+//
+//    return sensors_list;
 }
 
 double *get_weight_coefficients(double *integrated_scores, int number_of_sensors) {
