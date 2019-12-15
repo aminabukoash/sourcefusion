@@ -53,8 +53,7 @@ double *get_degree_matrix(SensorsList_t sensors_list) {
     return degree_matrix;
 }
 
-void get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors,
-                                 double *eigenvalues, double **eigenvectors) {
+void get_eigenvalues_and_vectors(double *degree_matrix, int number_of_sensors, double *eigenvalues, double **eigenvectors) {
 
     double *degree_matrix_temp = (double *) calloc(number_of_sensors * number_of_sensors, sizeof(double));
 
@@ -222,6 +221,8 @@ SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list, double *integ
         }
     }
 
+    printf("reduced list size: %lu\n", reduced_list.size());
+
     return reduced_list;
 
 //    double threshold_value;
@@ -249,6 +250,8 @@ SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list, double *integ
 //        number_of_sensors--;
 //    }
 //
+//    printf("reduced list size: %lu", sensors_list.size());
+//
 //    return sensors_list;
 }
 
@@ -260,22 +263,24 @@ double *get_weight_coefficients(double *integrated_scores, int number_of_sensors
     for (int i = 0; i < number_of_sensors; ++i) {
         scores_sum += integrated_scores[i];
     }
-
+    printf("Step 7.2\n Weight Coefficients: [");
     for (int i = 0; i < number_of_sensors; ++i) {
         weight_coefficients[i] = integrated_scores[i] / scores_sum;
+        printf("%f,", weight_coefficients[i]);
     }
-
+    printf("]\n");
     return weight_coefficients;
 }
 
-double
-get_fused_output(SensorsList_t sensors_list, double *weight_coefficients) {
+double get_fused_output(SensorsList_t sensors_list, double *weight_coefficients) {
     double fused_output = 0.0;
     int number_of_sensors = sensors_list.size();
 
     for (int i = 0; i < number_of_sensors; ++i) {
         fused_output += sensors_list[i].value * weight_coefficients[i];
     }
+
+    printf("Fused Output: %f\n", fused_output);
 
     return fused_output;
 }
@@ -300,12 +305,12 @@ double perform_sensor_fusion(SensorsList_t sensors, float p, float tolerance) {
     double *integrated_support_scores = get_integrated_support_scores(
             principal_components, contribution_rates, number_of_sensors, m);
 
-    eliminate_incorrect_data(sensors, integrated_support_scores, tolerance);
+   SensorsList_t reduced_list = eliminate_incorrect_data(sensors, integrated_support_scores, tolerance);
 
     double *weight_coefficients = get_weight_coefficients(integrated_support_scores,
-            sensors.size());
+            reduced_list.size());
 
-    double fused_output = get_fused_output(sensors, weight_coefficients);
+    double fused_output = get_fused_output(reduced_list, weight_coefficients);
 
     free(degree_matrix);
     free(eigenvectors);

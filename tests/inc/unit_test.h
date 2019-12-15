@@ -16,6 +16,8 @@ printf("#================================================#\n");} }
 
 void run_automated_unit_test();
 
+int compare_doubles(double a, double b);
+
 void automated_degree_matrix_test();
 
 void automated_eigenvalues_and_vectors_test();

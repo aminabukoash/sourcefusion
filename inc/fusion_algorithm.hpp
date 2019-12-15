@@ -40,7 +40,7 @@ void delete_element_from_double_array(double* array, int index, int size);
  * @param values Sensor values at a specific timestamp.
  * @return
  */
-double** get_degree_matrix(SensorsList_t sensors_list);
+double* get_degree_matrix(SensorsList_t sensors_list);
 
 /**
  * Calculate all the eigenvalues and vectors for the support degree matrix.
@@ -48,7 +48,7 @@ double** get_degree_matrix(SensorsList_t sensors_list);
  * @param eigenvalues The eigenvalues for the support degree matrix.
  * @param eigenvectors The eigenvectors for the support degree matrix.
  */
-void get_eigenvalues_and_vectors(double** degree_matrix, int number_of_sensors, double* eigenvalues, double** eigenvectors);
+void get_eigenvalues_and_vectors(double* degree_matrix, int number_of_sensors, double* eigenvalues, double** eigenvectors);
 
 
 /**
@@ -58,7 +58,7 @@ void get_eigenvalues_and_vectors(double** degree_matrix, int number_of_sensors, 
  * @param number_of_sensors The total sensor count.
  * @return The principal components of the support degree matrix.
  */
-double **get_principal_components(double **degree_matrix, double **eignvectors, int number_of_sensors);
+double **get_principal_components(double *degree_matrix, double **eignvectors, int number_of_sensors);
 
 /**
  *  Calculate the contribution rates of the individual principal components.
