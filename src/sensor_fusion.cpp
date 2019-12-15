@@ -33,9 +33,9 @@ int main(int argc, char *argv[]) {
     Sensor_t sensor3 = {.value=53.2, .time=make_time("12:00"), .name = "sens3"};
     Sensor_t sensor4 = {.value=54, .time=make_time("12:00"), .name = "sens4"};
     Sensor_t sensor5 = {.value=52.6, .time=make_time("12:00"), .name = "sens5"};
-//    Sensor_t sensor6 = {.value=53.2, .time=make_time("12:00"), .name = "sens6"};
-//    Sensor_t sensor7 = {.value=53.3, .time=make_time("12:00"), .name = "sens7"};
-//    Sensor_t sensor8 = {.value=52.5, .time=make_time("12:00"), .name = "sens8"};
+    Sensor_t sensor6 = {.value=53.2, .time=make_time("12:00"), .name = "sens6"};
+    Sensor_t sensor7 = {.value=53.3, .time=make_time("12:00"), .name = "sens7"};
+    Sensor_t sensor8 = {.value=52.5, .time=make_time("12:00"), .name = "sens8"};
 
 
     list.push_back(sensor);
@@ -43,9 +43,9 @@ int main(int argc, char *argv[]) {
     list.push_back(sensor3);
     list.push_back(sensor4);
     list.push_back(sensor5);
-//    list.push_back(sensor6);
-//    list.push_back(sensor7);
-//    list.push_back(sensor8);
+    list.push_back(sensor6);
+    list.push_back(sensor7);
+    list.push_back(sensor8);
 
     double fused = perform_sensor_fusion(list, 0.85, 0.7);
 
