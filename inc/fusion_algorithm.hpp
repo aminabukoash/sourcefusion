@@ -20,31 +20,6 @@ extern "C" {
 #endif
 
 /**
-*  Helper function - Adds the second double vector to the first one.
-* @param dest The vector that will be added to.
-* @param src The vector that will be used to add.
-* @param vector_size the size of the vectors.
-*/
-void vector_add(double* dest, double* src, int vector_size);
-
-/**
- *  Helper function - Multiplies a vector by a double scalar value.
- * @param vector The vector that will be multiplied.
- * @param vector_size the size of the vectors.
- * @param scalar the scalar that will be used to multiply of the vectors.
- */
-double *vector_scalar_multiply(double *vector, int vector_size, double scalar);
-
-/**
- *  Helper function - Multiplies a vector by another vector.
- * @param vector1 The first vector that will be multiplied.
- * @param vector2 The second vector that will be multiplied.
- * @param vector_size the size of the vectors.
- * @return the sum of the multiplied vectors.
- */
-double vector_vector_multiply(double *vector1, double *vector2, int vector_size);
-
-/**
  *  Helper function - Removes a sensor from the list by it's name..
  * @param sensors The sensors list vector.
  * @param name The name of the sensor to be removed.
