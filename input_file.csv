@@ -11,3 +11,9 @@ time,name,temp
 10:10, sensor4, 35
 10:10, sensor5, 38
 10:10, sensor6, 36
+10:15, sensor1, 37.5
+10:15, sensor2, 34.5
+10:15, sensor3, 36.5
+10:15, sensor4, 35.5
+10:15, sensor5, 38.5
+10:15, sensor6, 36.5

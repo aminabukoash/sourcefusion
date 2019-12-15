@@ -81,6 +81,4 @@ char *get_field(const char *line,
 
 int are_digits(const char *string);
 
-void print_time(time_t time);
-
 #endif /* SF_COMMON_HPP_ */
