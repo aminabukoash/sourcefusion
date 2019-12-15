@@ -4,6 +4,7 @@
  */
 
 // All C++ Headers
+#include <unistd.h>
 #include "../inc/sensor_fusion_implementation.hpp"
 #include "../inc/fusion_algorithm.hpp"
 
@@ -42,9 +43,12 @@ int parse_file(char *file_name,
            sensor_stuck_interval_minutes);
     printf("fusion interval: %d\n", fusion_interval_minutes);
 
-    FILE *file = fopen(file_name, "r");
+    char *OUTPUT_FILE_PATH = "../data/fused_outputs.txt";
+    char DATA_PATH[9] = "../data/";
+    char *input_file_path = strcat(DATA_PATH, file_name);
+    FILE *file = fopen(input_file_path, "r");
 
-    if (NULL == file)
+    if (file == NULL)
     {
         printf("Error...\nCannot open file: %s\n", file_name);
         printf("Either the filename is incorrect or it does not exists.\n");
@@ -56,7 +60,6 @@ int parse_file(char *file_name,
         char time_str[20];
         int count = 0;
         char *not_reach_end;
-        char *OUTPUT_FILENAME = "fused_outputs.txt";
         SensorsList_t sensorList;
         ValidationList_t validationList;
 
@@ -117,7 +120,7 @@ int parse_file(char *file_name,
                     }
 
                     if(count == 3){
-                        output_file(OUTPUT_FILENAME, "\nTime: Fused Value\n");
+                        output_file(OUTPUT_FILE_PATH, "\nTime: Fused Value\n");
                     }
 
                     /**
@@ -139,9 +142,9 @@ int parse_file(char *file_name,
                         // push the Sensor List to the Fusion List
                         double fused_output = perform_sensor_fusion(sensorList, contribution_p, tolerance);
 
-                        char output[20];
+                        char output[40];
                         sprintf(output, "%s: %f\n", time_str, fused_output);
-                        output_file(OUTPUT_FILENAME, output);
+                        output_file(OUTPUT_FILE_PATH, output);
                         // Clear it to start a new sensorList
                         sensorList.clear();
                         // Push the sensor to the new list
@@ -190,6 +193,7 @@ int validate_interval(const char *string)
 
 void check_sensor_stuck(ValidationList_t *list, int interval)
 {
+    char *STUCK_FILE_PATH = "../data/stuck_sensors.txt";
     double diff_in_seconds = 0;
 
     for (auto it = list->begin(); it != list->end(); it++)
@@ -197,24 +201,25 @@ void check_sensor_stuck(ValidationList_t *list, int interval)
         printf("checking sensor %s....\n", it->first.c_str());
 
         int size = it->second.data.size();
-        for (int i = 1; i < size; ++i)
-        {
-            if (size > 1)
-            {
-                //TODO: handle problem if a new day occurs
-                diff_in_seconds = difftime(it->second.data[i].first,
-                                           it->second.data[i - 1].first);
+        for (int i = 0; i < size; ++i){
+            if (size > 1){
+                for (int j = i+1; j < size; ++j) {
+                    if (it->second.data[i].second != it->second.data[j].second){
+                        break;
+                    }
 
-                if ((diff_in_seconds / 60) > interval)
-                {
-                    if (it->second.data[i].second
-                        == it->second.data[i - 1].second)
+                    diff_in_seconds = abs(difftime(it->second.data[j].first, it->second.data[i].first));
+
+                    if ((diff_in_seconds / 60) > interval)
                     {
-                        printf("Sensor %s is stuck with value %f\n",
-                               it->first.c_str(),
-                               it->second.data[i].second);
+                        if (it->second.data[i].second == it->second.data[j].second)
+                        {
+                            char output[40];
+                            sprintf(output, "Sensor %s is stuck with value %f\n", it->first.c_str(), it->second.data[i].second);
+                            output_file(STUCK_FILE_PATH, output);
 
-                        it->second.status = SensorStatus_t::SENSOR_STATUS_STUCK;
+                            it->second.status = SensorStatus_t::SENSOR_STATUS_STUCK;
+                        }
                     }
                 }
             }
