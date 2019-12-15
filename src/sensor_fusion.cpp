@@ -66,17 +66,17 @@ int main(int argc, char *argv[]) {
         filename = argv[1];
     }
     if (argc >= 3) {
-        contribution_p = atoi(argv[2]);
+        contribution_p = atof(argv[2]);
     }
     if (argc >= 4) {
-        tolerance = atoi(argv[3]);
+        tolerance = atof(argv[3]);
     }
     if (argc >= 5) {
         if (are_digits(argv[4]) == 0) {
 
             int sensor_stuck_interval = validate_interval(argv[4]);
 
-            if (-1 != sensor_stuck_interval) {
+            if (sensor_stuck_interval != -1) {
                 stuck_interval = sensor_stuck_interval;
             }
         }

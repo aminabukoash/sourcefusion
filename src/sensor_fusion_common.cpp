@@ -100,14 +100,3 @@ int are_digits(const char *string)
     }
     return 0;
 }
-
-void print_time(time_t time)
-{
-    char time_buffer[100];
-    strftime(time_buffer,
-             sizeof(time_buffer),
-             "Time is %H:%M\n",
-             localtime(&time));
-
-    printf(time_buffer);
-}

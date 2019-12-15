@@ -57,5 +57,7 @@ int compare_sensors_times(Sensor_t *sensor,
 
 void test_bench();
 
+int output_file(char *filename, char *content);
+
 
 #endif /* SF_IMPL_HPP_ */
