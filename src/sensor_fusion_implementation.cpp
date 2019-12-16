@@ -43,7 +43,7 @@ int parse_file(char *file_name,
            sensor_stuck_interval_minutes);
     printf("fusion interval: %d\n", fusion_interval_minutes);
 
-    char *OUTPUT_FILE_PATH = "../data/fused_outputs.txt";
+    char *OUTPUT_FILE_PATH = "../data/fused_outputs.csv";
     char DATA_PATH[9] = "../data/";
     char *input_file_path = strcat(DATA_PATH, file_name);
     FILE *file = fopen(input_file_path, "r");
@@ -120,7 +120,7 @@ int parse_file(char *file_name,
                     }
 
                     if(count == 3){
-                        output_file(OUTPUT_FILE_PATH, "\nTime: Fused Value\n");
+                        output_file(OUTPUT_FILE_PATH, "\nTime,Fused Value\n");
                     }
 
                     /**
@@ -143,7 +143,7 @@ int parse_file(char *file_name,
                         double fused_output = perform_sensor_fusion(sensorList, contribution_p, tolerance);
 
                         char output[40];
-                        sprintf(output, "%s: %f\n", time_str, fused_output);
+                        sprintf(output, "%s,%f\n", time_str, fused_output);
                         output_file(OUTPUT_FILE_PATH, output);
                         // Clear it to start a new sensorList
                         sensorList.clear();
