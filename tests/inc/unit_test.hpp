@@ -2,23 +2,30 @@
 // Created by Chidiebere Onyedinma on 2019-12-15.
 //
 
-#ifndef SOURCEFUSION_UNIT_TEST_H
-#define SOURCEFUSION_UNIT_TEST_H
+#ifndef SOURCEFUSION_UNIT_TEST_HPP
+#define SOURCEFUSION_UNIT_TEST_HPP
 
 #include "../../inc/sensor_fusion_common.hpp"
 #include "../../inc/sensor_fusion_implementation.hpp"
 #include "../../inc/fusion_algorithm.hpp"
 
-#define ASSERT_RESULT(result) { if (result) { printf("#================================================#\n"); \
-printf("TEST -> %s: PASSED!\n", __func__); printf("#================================================#\n"); } else \
-{printf("#================================================#\n"); printf("TEST -> %s: FAILED!\n", __func__); \
-printf("#================================================#\n");} }
+#define ASSERT_RESULT(result, output) { if (result) { sprintf(output,"#=========================================\
+=================#\n %s %s:"\
+" %s#==========================================================#\n\n", "TEST -> ",__func__, "PASSED!\n");} else \
+{sprintf(output, "#==========================================================#\n %s %s:"\
+" %s#==========================================================#\n\n", "TEST -> ",__func__, "FAILED!\n");} }
 
 void run_automated_unit_test();
 
 int compare_doubles(double a, double b);
 
 void automated_parse_input_file_test();
+
+void automated_compare_sensors_times_test();
+
+void automated_validate_interval_test();
+
+void automated_create_sensor_from_line_test();
 
 void automated_degree_matrix_test();
 
@@ -40,4 +47,4 @@ void automated_fused_output_test();
 
 void automated_perform_sensor_fusion_test();
 
-#endif //SOURCEFUSION_UNIT_TEST_H
+#endif //SOURCEFUSION_UNIT_TEST_HPP

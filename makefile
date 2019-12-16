@@ -4,14 +4,14 @@ CC=g++
 CFLAGS=-std=c++17
 INCLUDES=
 ifeq ($(OS),Windows_NT)
-       INCLUDES=-I"inc" -I"C:\cygwin64\usr\include"
+       INCLUDES=-I"inc" -I"tests\inc" -I"C:\cygwin64\usr\include"
 else
        UNAME_S := $(shell uname -s)
        ifeq ($(UNAME_S),Darwin)
-       		INCLUDES=-I"inc" -I/usr/local/Cellar/gsl/2.6/include
+       		INCLUDES=-I"inc" -I"tests/inc" -I/usr/local/Cellar/gsl/2.6/include
        endif
        ifeq ($(UNAME_S),Linux)
-       		INCLUDES=-I"inc" -I/usr/include/gsl
+       		INCLUDES=-I"inc" -I"tests/inc" -I/usr/include/gsl
        endif
 endif
 
@@ -50,6 +50,13 @@ fusion_algorithm.o : src/fusion_algorithm.cpp
 sensor_fusion_implementation.o : src/sensor_fusion_implementation.cpp
 	$(CC) -c $(CFLAGS) $(INCLUDES) src/sensor_fusion_implementation.cpp -o build/sensor_fusion_implementation.o
 
+unit_test.o : tests/src/unit_test.cpp
+	$(CC) -c $(CFLAGS) $(INCLUDES) tests/src/unit_test.cpp -o build/unit_test.o
+
+tests: unit_test.o
+	$(CC) $(CFLAGS) $(LFLAGS) -o bin/TESTS build/unit_test.o build/sensor_fusion_common.o build/fusion_algorithm.o build/sensor_fusion_implementation.o $(LIBS)
+
+all: default tests
 
 #CLEAN COMMANDS
 clean:

@@ -106,7 +106,7 @@ int parse_file(char *file_name, float contribution_p, float tolerance,
                     }
 
                     if(count == 3){
-                        output_file(OUTPUT_FILE_PATH, "Time,Fused Value\n");
+                        output_file(OUTPUT_FILE_PATH, "Time,Fused Value\n", APPEND);
                     }
 
                     /**
@@ -127,7 +127,7 @@ int parse_file(char *file_name, float contribution_p, float tolerance,
 
                         char output[40];
                         sprintf(output, "%s,%f\n", time_str, fused_output);
-                        output_file(OUTPUT_FILE_PATH, output);
+                        output_file(OUTPUT_FILE_PATH, output, APPEND);
                         // Clear it to start a new sensorList
                         sensorList.clear();
                         // Push the sensor to the new list
@@ -191,7 +191,7 @@ void check_sensor_stuck(ValidationList_t *list, int interval) {
                         if (it->second.data[i].second == it->second.data[j].second) {
                             char output[40];
                             sprintf(output, "Sensor %s is stuck with value %f\n", it->first.c_str(), it->second.data[i].second);
-                            output_file(STUCK_FILE_PATH, output);
+                            output_file(STUCK_FILE_PATH, output, APPEND);
 
                             it->second.status = SensorStatus_t::SENSOR_STATUS_STUCK;
                         }
@@ -229,11 +229,15 @@ void test_bench()
 
 }
 
-int output_file(char *filename, char *content) {
+int output_file(char *filename, char *content, int mode) {
     FILE *file_p;
 
     /*  Open file in append mode. */
-    file_p = fopen(filename, "a");
+    if(mode == APPEND){
+        file_p = fopen(filename, "a");
+    } else if (mode == NEW_LIST){
+        file_p = fopen(filename, "w");
+    }
 
 
     /* Create the file if it doesn't exist.*/
