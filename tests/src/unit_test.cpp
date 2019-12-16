@@ -48,6 +48,7 @@ void run_automated_unit_test() {
     list.push_back(sensor3);
     list.push_back(sensor4);
 
+    automated_parse_input_file_test();
     automated_degree_matrix_test();
     automated_eigenvalues_and_vectors_test();
     automated_principal_components_test();
@@ -68,6 +69,15 @@ int compare_doubles(double a, double b) {
     } else {
         return 0;
     }
+}
+
+void automated_parse_input_file_test(){
+    int status = parse_file("../tests/data/test_data.csv", ALGORITHM_PARAMETER, TOLERANCE, 10, 2, "../tests/data/test_output_data.csv");
+    int result = 1;
+    if(status != 0){
+        result = 0;
+    }
+    ASSERT_RESULT(result)
 }
 
 void automated_degree_matrix_test() {

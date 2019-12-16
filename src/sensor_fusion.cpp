@@ -92,6 +92,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    ret = parse_file(filename, contribution_p, tolerance, stuck_interval, fusion_interval);
+    ret = parse_file(filename, contribution_p, tolerance, stuck_interval, fusion_interval, "../data/fused_outputs.csv");
     return ret;
 }

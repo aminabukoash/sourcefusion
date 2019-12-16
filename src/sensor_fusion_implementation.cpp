@@ -3,7 +3,7 @@
  *  @brief contains the implementations of the sensor fusion functions
  */
 
-// All C++ Headers
+/* All C++ Headers */
 #include <unistd.h>
 #include "../inc/sensor_fusion_implementation.hpp"
 #include "../inc/fusion_algorithm.hpp"
@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-// All C Headers go here
+/* All C Headers go here */
 #include <ctype.h>
 
 #ifdef __cplusplus
@@ -33,72 +33,61 @@ Sensor_t create_sensor_from_line(char *sensorInfo)
     return sensor;
 }
 
-int parse_file(char *file_name,
-               float contribution_p,
-               float tolerance,
-               int sensor_stuck_interval_minutes,
-               int fusion_interval_minutes)
-{
+int parse_file(char *file_name, float contribution_p, float tolerance,
+        int sensor_stuck_interval_minutes, int fusion_interval_minutes, char* output_file_path){
+
     printf("Minutes passed to determine if sensor is stuck interval: %d\n",
            sensor_stuck_interval_minutes);
     printf("fusion interval: %d\n", fusion_interval_minutes);
 
-    char *OUTPUT_FILE_PATH = "../data/fused_outputs.csv";
+    char *OUTPUT_FILE_PATH = output_file_path;
     char DATA_PATH[9] = "../data/";
-    char *input_file_path = strcat(DATA_PATH, file_name);
+    char *input_file_path = (char*)malloc(strlen(file_name) + strlen(DATA_PATH) + 1);
+    strcpy(input_file_path, DATA_PATH);
+    strcat(input_file_path, file_name);
     FILE *file = fopen(input_file_path, "r");
+    free(input_file_path);
 
-    if (file == NULL)
-    {
+    if (file == NULL) {
         printf("Error...\nCannot open file: %s\n", file_name);
         printf("Either the filename is incorrect or it does not exists.\n");
         return FAIL;
-    }
-    else
-    {
+    } else {
         char line[1024];
         char time_str[20];
         int count = 0;
-        char *not_reach_end;
+        char *not_reach_end ="";
         SensorsList_t sensorList;
         ValidationList_t validationList;
 
         //TODO: if invalid line.. print invalid data and continue;
         // at the end print the number of ignored data; maybe also print the line number in file.
-        while (not_reach_end)
-        {
+        while (not_reach_end) {
             not_reach_end = fgets(line, 1024, file);
             count++;
-            if (count != 1){
+            if (count != 1) {
                 Sensor_t sensor;
                 char *sensorInfo = strdup(line);
 
                 sensor = create_sensor_from_line(sensorInfo);
 
-                if (!sensorList.empty())
-                {
+                if (!sensorList.empty()) {
                     /**
                      * Handle validation list here.
                      * Validation list will be used to check if a sensor is stuck or not.
                      */
                     auto it = validationList.find(sensor.name);
 
-                    if (it != validationList.end())
-                    {
+                    if (it != validationList.end()) {
 
                         /**
                          * if the sensor is found, we push the new data to the SensorDataList_t
                          */
 
-                        printf("\nsensor: %s found with value %.0f\n",
-                               sensor.name,
-                               sensor.value);
+                        printf("\nsensor: %s found with value %.0f\n", sensor.name, sensor.value);
 
-                        it->second.data.push_back(make_pair(sensor.time,
-                                                            sensor.value));
-                    }
-                    else
-                    {
+                        it->second.data.push_back(make_pair(sensor.time, sensor.value));
+                    } else {
 
                         /**
                          * if the sensor is not found found:
@@ -108,19 +97,16 @@ int parse_file(char *file_name,
 
                         SensorDataList_t dataList;
                         SensorStateInfo_t sensorInfo;
-                        printf("sensor: %s not found. Adding new sensor..\n",
-                               sensor.name);
+                        printf("sensor: %s not found. Adding new sensor..\n", sensor.name);
 
-                        dataList.push_back(make_pair(sensor.time,
-                                                     sensor.value));
+                        dataList.push_back(make_pair(sensor.time, sensor.value));
 
                         sensorInfo.data = dataList;
-                        validationList.insert(make_pair(sensor.name,
-                                                        sensorInfo));
+                        validationList.insert(make_pair(sensor.name, sensorInfo));
                     }
 
                     if(count == 3){
-                        output_file(OUTPUT_FILE_PATH, "\nTime,Fused Value\n");
+                        output_file(OUTPUT_FILE_PATH, "Time,Fused Value\n");
                     }
 
                     /**
@@ -131,14 +117,11 @@ int parse_file(char *file_name,
                      */
                     int compare_status = compare_sensors_times(&sensorList[0], &sensor, fusion_interval_minutes);
 
-                    if (compare_status == APPEND && not_reach_end)
-                    {
+                    if (compare_status == APPEND && not_reach_end) {
                         strcpy(time_str, get_field(sensorInfo, 1));
                         sensorList.push_back(sensor);
                         //TODO: should we check for duplicate sensors?
-                    }
-                    else
-                    {
+                    } else {
                         // push the Sensor List to the Fusion List
                         double fused_output = perform_sensor_fusion(sensorList, contribution_p, tolerance);
 
@@ -150,9 +133,7 @@ int parse_file(char *file_name,
                         // Push the sensor to the new list
                         sensorList.push_back(sensor);
                     }
-                }
-                else // sensorList.empty()
-                {
+                } else {
                     printf("New Sensor list, adding sensor\n");
                     sensorList.push_back(sensor);
 
@@ -169,40 +150,36 @@ int parse_file(char *file_name,
                 free(sensorInfo);
             }
         }
+
         fclose(file);
 
         // checking if any sensors are stuck
-        check_sensor_stuck(&validationList,
-                           sensor_stuck_interval_minutes);
+        check_sensor_stuck(&validationList, sensor_stuck_interval_minutes);
     }
 
     return SUCCESS;
 }
 
-int validate_interval(const char *string)
-{
+int validate_interval(const char *string) {
     //TODO: accept different range for fusion and for stuck
     int value = atoi(string);
-    if (!(0 <= value && value < 60))
-    {
+    if (!(0 <= value && value < 60)) {
         printf("Interval value entered is out of range, please enter a value from 0 to 59 in minutes");
         return -1;
     }
     return value;
 }
 
-void check_sensor_stuck(ValidationList_t *list, int interval)
-{
+void check_sensor_stuck(ValidationList_t *list, int interval) {
     char *STUCK_FILE_PATH = "../data/stuck_sensors.txt";
     double diff_in_seconds = 0;
 
-    for (auto it = list->begin(); it != list->end(); it++)
-    {
+    for (auto it = list->begin(); it != list->end(); it++) {
         printf("checking sensor %s....\n", it->first.c_str());
 
         int size = it->second.data.size();
         for (int i = 0; i < size; ++i){
-            if (size > 1){
+            if (size > 1) {
                 for (int j = i+1; j < size; ++j) {
                     if (it->second.data[i].second != it->second.data[j].second){
                         break;
@@ -210,10 +187,8 @@ void check_sensor_stuck(ValidationList_t *list, int interval)
 
                     diff_in_seconds = abs(difftime(it->second.data[j].first, it->second.data[i].first));
 
-                    if ((diff_in_seconds / 60) > interval)
-                    {
-                        if (it->second.data[i].second == it->second.data[j].second)
-                        {
+                    if ((diff_in_seconds / 60) > interval) {
+                        if (it->second.data[i].second == it->second.data[j].second) {
                             char output[40];
                             sprintf(output, "Sensor %s is stuck with value %f\n", it->first.c_str(), it->second.data[i].second);
                             output_file(STUCK_FILE_PATH, output);
@@ -223,8 +198,7 @@ void check_sensor_stuck(ValidationList_t *list, int interval)
                     }
                 }
             }
-            else
-            {
+            else {
                 it->second.status = SensorStatus_t::SENSOR_STATUS_ON;
 
             }
@@ -232,23 +206,18 @@ void check_sensor_stuck(ValidationList_t *list, int interval)
     }
 }
 
-int compare_sensors_times(Sensor_t *sensor, Sensor_t *sensor2, int interval)
-{
+int compare_sensors_times(Sensor_t *sensor, Sensor_t *sensor2, int interval) {
     double diff_in_seconds = 0;
 
         //TODO: handle problem if a new day occurs
-    diff_in_seconds = difftime(sensor2->time,
-                               sensor->time);
+    diff_in_seconds = difftime(sensor2->time, sensor->time);
 
     printf("diff in minutes? %.0f\n", diff_in_seconds / 60);
 
-    if ((diff_in_seconds / 60) > interval)
-    {
+    if ((diff_in_seconds / 60) > interval) {
         printf("Sensor %s is past the interval, adding to a new list\n", sensor2->name);
         return NEW_LIST;
-    }
-    else
-    {
+    } else {
         printf("Sensor %s is within interval, appending to list \n", sensor2->name);
         return APPEND;
 
@@ -260,7 +229,7 @@ void test_bench()
 
 }
 
-int output_file(char *filename, char *content){
+int output_file(char *filename, char *content) {
     FILE *file_p;
 
     /*  Open file in append mode. */

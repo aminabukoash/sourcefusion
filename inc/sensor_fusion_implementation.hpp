@@ -33,11 +33,8 @@ Sensor_t create_sensor_from_line(char *sensorInfo);
  * @return A matrix with all sensor values. Each row represents all sensor values at
  * a specific timestamp.
  */
-int parse_file(char *file_name,
-               float contribution_p,
-               float tolerance,
-               int sensor_stuck_interval_minutes = 10,
-               int fusion_interval_minutes = 2);
+int parse_file(char *file_name, float contribution_p, float tolerance, int sensor_stuck_interval_minutes = 10,
+               int fusion_interval_minutes = 2, char* output_file_path = "../data/fused_outputs.csv");
 
 /**
  * Eliminate sensors that are not supported by more than q% of the sensors,
@@ -48,12 +45,9 @@ int parse_file(char *file_name,
 
 int validate_interval(const char *string);
 
-void check_sensor_stuck(ValidationList_t *list,
-                        int interval);
+void check_sensor_stuck(ValidationList_t *list, int interval);
 
-int compare_sensors_times(Sensor_t *sensor,
-                          Sensor_t *sensor2,
-                          int interval);
+int compare_sensors_times(Sensor_t *sensor, Sensor_t *sensor2, int interval);
 
 void test_bench();
 
