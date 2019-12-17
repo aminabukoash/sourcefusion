@@ -21,7 +21,6 @@ extern "C" {
 }
 #endif
 
-
 Sensor_t create_sensor_from_line(char *sensorInfo);
 
 /**
@@ -35,8 +34,12 @@ Sensor_t create_sensor_from_line(char *sensorInfo);
  * @param fusion_interval_minutes The maximum interval where sensor values are fused.
  * @return 0 if fusion was successful, -1 if it failed.
  */
-int parse_file(char *file_name, float contribution_p, float tolerance, int sensor_stuck_interval_minutes = 10,
-               int fusion_interval_minutes = 2, char* output_file_path = "../data/fused_outputs.csv");
+int parse_file(char *file_name,
+               float contribution_p = 0.85,
+               float tolerance = 0.7,
+               int sensor_stuck_interval_minutes = 10,
+               int fusion_interval_minutes = 2,
+               char *output_file_path = OUTPUT_FILE_NAME);
 
 /**
  * @brief Check if the value is within range.
@@ -54,7 +57,8 @@ int validate_interval(const char *string);
  * @param list List of sensors and the values.
  * @param interval The interval in minutes where if the value doesn't change, the sensor is considered stuck.
  */
-void check_sensor_stuck(ValidationList_t *list, int interval);
+void check_sensor_stuck(ValidationList_t *list,
+                        int interval);
 
 /**
  * @brief Check if the sensor times need to be fused.
@@ -65,7 +69,9 @@ void check_sensor_stuck(ValidationList_t *list, int interval);
  * @param interval The maximum time interval to be fused in minutes.
  * @return 0 if sensors are to be fused, 1 if the second sensor will be fused in the next list.
  */
-int compare_sensors_times(Sensor_t *sensor, Sensor_t *sensor2, int interval);
+int compare_sensors_times(Sensor_t *sensor,
+                          Sensor_t *sensor2,
+                          int interval);
 
 /**
  * @brief Outputs the provided string to a file.
@@ -76,7 +82,8 @@ int compare_sensors_times(Sensor_t *sensor, Sensor_t *sensor2, int interval);
  * @param mode The writing mode. It can be append or a new file.
  * @return -1 if the file couldn't be opened, 0 if the content was outputted successfully.
  */
-int output_file(char *filename, char *content, int mode);
-
+int output_file(char *filename,
+                char *content,
+                int mode);
 
 #endif /* SF_IMPL_HPP_ */

@@ -41,6 +41,8 @@ using namespace std;
 #define SENSOR_MAX_NAME_LEN  46
 #define SENSOR_MAX_TIME_LEN 8
 
+#define OUTPUT_FILE_NAME "../data/fused_outputs.csv"
+
 /**
  * @typedef Vector of sensor data: timestamp and value.
  */

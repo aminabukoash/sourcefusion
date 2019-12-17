@@ -38,7 +38,10 @@ double* get_degree_matrix(SensorsList_t sensors_list);
  * @param eigenvalues The eigenvalues for the support degree matrix.
  * @param eigenvectors The eigenvectors for the support degree matrix.
  */
-void get_eigenvalues_and_vectors(double* degree_matrix, int number_of_sensors, double* eigenvalues, double** eigenvectors);
+void get_eigenvalues_and_vectors(double *degree_matrix,
+                                 int number_of_sensors,
+                                 double *eigenvalues,
+                                 double **eigenvectors);
 
 /**
  * @brief Calculate the principal components of the degree matrix.

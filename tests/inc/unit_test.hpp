@@ -27,7 +27,8 @@ void run_automated_unit_test();
  * @param b The second number to be compared.
  * @return 0 if the numbers are equal, 1 otherwise.
  */
-int compare_doubles(double a, double b);
+int compare_doubles(double a,
+                    double b);
 
 /**
  * @test Unit test for the parse_file function.
