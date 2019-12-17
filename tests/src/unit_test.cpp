@@ -1,6 +1,8 @@
-//
-// Created by Chidiebere Onyedinma on 2019-12-15.
-//
+/** @file unit_test.cpp
+ * @brief Project unit tests implementations.
+ *
+ * Contains the function implementations for the project unit tests.
+ */
 
 #include "../inc/unit_test.hpp"
 
@@ -317,6 +319,10 @@ void automated_perform_sensor_fusion_test() {
     printf("%s", output);
 }
 
+/**
+ * Unit tests main function.
+ * @return 0 if the execution was successful.
+ */
 int main() {
     run_automated_unit_test();
     return 0;

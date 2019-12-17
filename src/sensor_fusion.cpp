@@ -21,6 +21,9 @@ extern "C" {
 }
 #endif
 
+/**
+ * Prints the usage for the program.
+ */
 void print_usage() {
     printf("Usage: filename contribution_p tolerance stuck_interval fusion_interval\n");
     printf("\n");
@@ -33,6 +36,12 @@ void print_usage() {
     exit(EXIT_SUCCESS);
 }
 
+/**
+ * Program main function.
+ * @param argc An integer argument count of the command line arguments
+ * @param argv An argument vector of the command line arguments
+ * @return 0 if the execution was successful.
+ */
 int main(int argc, char *argv[]) {
     setbuf(stdout, NULL);
     printf("Program Name: %s\n", argv[0]);
