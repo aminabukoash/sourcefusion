@@ -1,6 +1,7 @@
-//
-// Created by Chidiebere Onyedinma on 2019-12-15.
-//
+/** @file unit_test.hpp
+ *  @brief contains the unit test headers
+ *
+ */
 
 #ifndef SOURCEFUSION_UNIT_TEST_HPP
 #define SOURCEFUSION_UNIT_TEST_HPP
@@ -17,7 +18,8 @@
 
 void run_automated_unit_test();
 
-int compare_doubles(double a, double b);
+int compare_doubles(double a,
+                    double b);
 
 void automated_parse_input_file_test();
 
