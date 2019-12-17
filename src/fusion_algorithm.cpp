@@ -324,6 +324,11 @@ double perform_sensor_fusion(SensorsList_t sensors,
     /* Free memory allocations that aren't needed anymore */
 
     free(degree_matrix);
+    /* Free each row individually. */
+    for (int i = 0; i < number_of_sensors; ++i) {
+        free(eigenvectors[i]);
+        free(principal_components[i]);
+    }
     free(eigenvectors);
     free(eigenvalues);
     free(principal_components);
