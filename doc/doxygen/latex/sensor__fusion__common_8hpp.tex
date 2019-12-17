@@ -1,0 +1,153 @@
+\hypertarget{sensor__fusion__common_8hpp}{}\section{inc/sensor\+\_\+fusion\+\_\+common.hpp File Reference}
+\label{sensor__fusion__common_8hpp}\index{inc/sensor\+\_\+fusion\+\_\+common.\+hpp@{inc/sensor\+\_\+fusion\+\_\+common.\+hpp}}
+
+
+contains the common data structures used in the sensor fusion project  
+
+
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$gsl/gsl\+\_\+math.\+h$>$}\newline
+{\ttfamily \#include $<$gsl/gsl\+\_\+eigen.\+h$>$}\newline
+{\ttfamily \#include $<$gsl/gsl\+\_\+blas.\+h$>$}\newline
+Include dependency graph for sensor\+\_\+fusion\+\_\+common.\+hpp\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structSensorStateInfo}{Sensor\+State\+Info}
+\item 
+struct \hyperlink{structSensor}{Sensor}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_aa90cac659d18e8ef6294c7ae337f6b58}\label{sensor__fusion__common_8hpp_aa90cac659d18e8ef6294c7ae337f6b58}} 
+\#define {\bfseries S\+U\+C\+C\+E\+SS}~0
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_abb508ea8227673f419e9fe3a86c30d8e}\label{sensor__fusion__common_8hpp_abb508ea8227673f419e9fe3a86c30d8e}} 
+\#define {\bfseries F\+A\+IL}~-\/1
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a78eb11b6264ea886c4956298f57c9057}\label{sensor__fusion__common_8hpp_a78eb11b6264ea886c4956298f57c9057}} 
+\#define {\bfseries N\+E\+W\+\_\+\+L\+I\+ST}~1
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a5a2a76e18bbd8b8cd9026f1cee18f197}\label{sensor__fusion__common_8hpp_a5a2a76e18bbd8b8cd9026f1cee18f197}} 
+\#define {\bfseries A\+P\+P\+E\+ND}~0
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_abeffc1d36015a1a02197b16024a94268}\label{sensor__fusion__common_8hpp_abeffc1d36015a1a02197b16024a94268}} 
+\#define {\bfseries S\+E\+N\+S\+O\+R\+\_\+\+M\+A\+X\+\_\+\+N\+A\+M\+E\+\_\+\+L\+EN}~46
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a774988e2ebe3cfeddf112d94fa7e81fc}\label{sensor__fusion__common_8hpp_a774988e2ebe3cfeddf112d94fa7e81fc}} 
+\#define {\bfseries S\+E\+N\+S\+O\+R\+\_\+\+M\+A\+X\+\_\+\+T\+I\+M\+E\+\_\+\+L\+EN}~8
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_ad7bd66d7bb560e9b935dc1d7a3803360}\label{sensor__fusion__common_8hpp_ad7bd66d7bb560e9b935dc1d7a3803360}} 
+typedef std\+::vector$<$ std\+::pair$<$ time\+\_\+t, double $>$ $>$ {\bfseries Sensor\+Data\+List\+\_\+t}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a4a5f16f44c58cf947d26e9aa7d19ee3f}\label{sensor__fusion__common_8hpp_a4a5f16f44c58cf947d26e9aa7d19ee3f}} 
+typedef enum Sensor\+Status {\bfseries Sensor\+Status\+\_\+t}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a3ca559ec775b817b39a2d3a6a886eb29}\label{sensor__fusion__common_8hpp_a3ca559ec775b817b39a2d3a6a886eb29}} 
+typedef struct \hyperlink{structSensorStateInfo}{Sensor\+State\+Info} {\bfseries Sensor\+State\+Info\+\_\+t}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_ac9e57a757403cc5761ba9373371f95d1}\label{sensor__fusion__common_8hpp_ac9e57a757403cc5761ba9373371f95d1}} 
+typedef struct \hyperlink{structSensor}{Sensor} {\bfseries Sensor\+\_\+t}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_aa55ad9577738a47dde74ac3807824d3b}\label{sensor__fusion__common_8hpp_aa55ad9577738a47dde74ac3807824d3b}} 
+typedef std\+::vector$<$ \hyperlink{structSensor}{Sensor\+\_\+t} $>$ {\bfseries Sensors\+List\+\_\+t}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_ac611658927085a62e1ec36d19379bbe0}\label{sensor__fusion__common_8hpp_ac611658927085a62e1ec36d19379bbe0}} 
+typedef std\+::map$<$ string, \hyperlink{structSensorStateInfo}{Sensor\+State\+Info} $>$ {\bfseries Validation\+List\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_aa348cf223e558076864814ee88920cec}\label{sensor__fusion__common_8hpp_aa348cf223e558076864814ee88920cec}} 
+enum {\bfseries Sensor\+Status} \{ {\bfseries S\+E\+N\+S\+O\+R\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+S\+T\+U\+CK} = 0, 
+{\bfseries S\+E\+N\+S\+O\+R\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+ON}, 
+{\bfseries S\+E\+N\+S\+O\+R\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+N\+K\+N\+O\+WN}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+time\+\_\+t \hyperlink{sensor__fusion__common_8hpp_a7b06c72f39100a40a4c0fc04c9432830}{make\+\_\+time} (const char $\ast$time)
+\begin{DoxyCompactList}\small\item\em Creates time\+\_\+t instance from char pointer. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{sensor__fusion__common_8hpp_a7fce9e5b74b68ebe92a40dafc0561641}{get\+\_\+field} (const char $\ast$line, int num)
+\begin{DoxyCompactList}\small\item\em Get the corresponding field from the character line. \end{DoxyCompactList}\item 
+int \hyperlink{sensor__fusion__common_8hpp_a8094c3132c9ad00e39edfa85df862eca}{are\+\_\+digits} (const char $\ast$string)
+\begin{DoxyCompactList}\small\item\em Checks if the string is a valid number. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+contains the common data structures used in the sensor fusion project 
+
+Contains the common data structures and type definitions used in the rest of the project. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a8094c3132c9ad00e39edfa85df862eca}\label{sensor__fusion__common_8hpp_a8094c3132c9ad00e39edfa85df862eca}} 
+\index{sensor\+\_\+fusion\+\_\+common.\+hpp@{sensor\+\_\+fusion\+\_\+common.\+hpp}!are\+\_\+digits@{are\+\_\+digits}}
+\index{are\+\_\+digits@{are\+\_\+digits}!sensor\+\_\+fusion\+\_\+common.\+hpp@{sensor\+\_\+fusion\+\_\+common.\+hpp}}
+\subsubsection{\texorpdfstring{are\+\_\+digits()}{are\_digits()}}
+{\footnotesize\ttfamily int are\+\_\+digits (\begin{DoxyParamCaption}\item[{const char $\ast$}]{string }\end{DoxyParamCaption})}
+
+
+
+Checks if the string is a valid number. 
+
+Checks if the provided string consists of valid number digits or not. 
+\begin{DoxyParams}{Parameters}
+{\em string} & The string to be validated. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if it\textquotesingle{}s a valid number, -\/1 if it\textquotesingle{}s not valid. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a7fce9e5b74b68ebe92a40dafc0561641}\label{sensor__fusion__common_8hpp_a7fce9e5b74b68ebe92a40dafc0561641}} 
+\index{sensor\+\_\+fusion\+\_\+common.\+hpp@{sensor\+\_\+fusion\+\_\+common.\+hpp}!get\+\_\+field@{get\+\_\+field}}
+\index{get\+\_\+field@{get\+\_\+field}!sensor\+\_\+fusion\+\_\+common.\+hpp@{sensor\+\_\+fusion\+\_\+common.\+hpp}}
+\subsubsection{\texorpdfstring{get\+\_\+field()}{get\_field()}}
+{\footnotesize\ttfamily char$\ast$ get\+\_\+field (\begin{DoxyParamCaption}\item[{const char $\ast$}]{line,  }\item[{int}]{num }\end{DoxyParamCaption})}
+
+
+
+Get the corresponding field from the character line. 
+
+Gets the corresponding field value from a comma separated line according to the provided field index. 
+\begin{DoxyParams}{Parameters}
+{\em line} & The character line. \\
+\hline
+{\em num} & The index of the required field. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The field value. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sensor__fusion__common_8hpp_a7b06c72f39100a40a4c0fc04c9432830}\label{sensor__fusion__common_8hpp_a7b06c72f39100a40a4c0fc04c9432830}} 
+\index{sensor\+\_\+fusion\+\_\+common.\+hpp@{sensor\+\_\+fusion\+\_\+common.\+hpp}!make\+\_\+time@{make\+\_\+time}}
+\index{make\+\_\+time@{make\+\_\+time}!sensor\+\_\+fusion\+\_\+common.\+hpp@{sensor\+\_\+fusion\+\_\+common.\+hpp}}
+\subsubsection{\texorpdfstring{make\+\_\+time()}{make\_time()}}
+{\footnotesize\ttfamily time\+\_\+t make\+\_\+time (\begin{DoxyParamCaption}\item[{const char $\ast$}]{time }\end{DoxyParamCaption})}
+
+
+
+Creates time\+\_\+t instance from char pointer. 
+
+Create the corresponding time\+\_\+t instance from a character string by deconstructing the time string and extracting time components. 
+\begin{DoxyParams}{Parameters}
+{\em time} & The time character string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The corresponding time\+\_\+t instance. 
+\end{DoxyReturn}
