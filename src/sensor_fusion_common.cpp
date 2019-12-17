@@ -18,8 +18,7 @@ extern "C" {
 }
 #endif
 
-time_t make_time(const char *time)
-{
+time_t make_time(const char *time) {
     int hours, minutes;
     struct tm tm;
     tm.tm_year = 2020 - 1900;  // Years from 1900
@@ -29,20 +28,16 @@ time_t make_time(const char *time)
     bool point_seperated = false;
     int length = strlen(time);
 
-    for (int i = 0; i < length; i++)
-    {
-        if (strchr(".", *time))
-        {
+    for (int i = 0; i < length; i++) {
+        if (strchr(".", *time)) {
             point_seperated = true;
         }
     }
 
-    if (point_seperated)
-    {
+    if (point_seperated) {
         sscanf(time, "%d.%d", &hours, &minutes);
     }
-    else
-    {
+    else {
         sscanf(time, "%d:%d", &hours, &minutes);
     }
 
@@ -52,50 +47,45 @@ time_t make_time(const char *time)
     tm.tm_isdst = 0;
     time_value = mktime(&tm);
 
-    if (time_value == -1)
-    {
+    if (time_value == -1) {
         printf("unable to make time\n");
     }
 
     return time_value;
 }
 
-char* get_field(const char *line,
-               int num)
-{
+char* get_field(const char *line, int num) {
+
     const char *p = line;
     size_t len;
     char *res;
-    for (;;)
-    {
+
+    for (;;) {
         len = strcspn(p, ",\n");
-        if (--num <= 0)
-        {
+
+        if (--num <= 0) {
             break;
         }
+
         p += len;
-        if (*p == ',')
-        {
+        if (*p == ',') {
             p++;
         }
     }
     res = (char*) malloc(len + 1);
-    if (res)
-    {
+
+    if (res) {
         memcpy(res, p, len);
         res[len] = '\0';
     }
     return res;
 }
 
-int are_digits(const char *string)
-{
+int are_digits(const char *string) {
     int length = strlen(string);
 
-    for (int i = 0; i < length; i++)
-    {
-        if (!isdigit(string[i]))
-        {
+    for (int i = 0; i < length; i++) {
+        if (!isdigit(string[i])) {
             printf("Value: %s entered is not a valid number!", string);
             return -1;
         }

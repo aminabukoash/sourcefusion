@@ -1,4 +1,3 @@
-
 /** @file source_fusion.cpp
  * @brief The main function for the Sensor Fusion Project.
  *
@@ -22,6 +21,8 @@ extern "C" {
 #endif
 
 void print_usage() {
+
+    //TODO: improve first line of usage
     printf("Usage: filename contribution_p tolerance stuck_interval fusion_interval\n");
     printf("\n");
     printf("  filename              : The name of the file with the input values. (required)\n");
@@ -34,6 +35,7 @@ void print_usage() {
 }
 
 int main(int argc, char *argv[]) {
+
     setbuf(stdout, NULL);
     printf("Program Name: %s\n", argv[0]);
     printf("Number of arguments: %d\n", argc);
@@ -43,7 +45,6 @@ int main(int argc, char *argv[]) {
     char *filename;
     float contribution_p = 0.85, tolerance = 0.7;
     int stuck_interval = 10, fusion_interval = 2;
-
 
     /**
      * Usage: filename contribution_p tolerance stuck_interval fusion_interval.
@@ -58,7 +59,8 @@ int main(int argc, char *argv[]) {
     if (argc == 1) {
         print_usage();
         return 0;
-    }else if(argc > 6){
+    }
+    else if (argc > 6) {
         printf("Incorrect number of arguments\n");
         print_usage();
         return 0;
@@ -75,7 +77,6 @@ int main(int argc, char *argv[]) {
     }
     if (argc >= 5) {
         if (are_digits(argv[4]) == 0) {
-
             int sensor_stuck_interval = validate_interval(argv[4]);
 
             if (sensor_stuck_interval != -1) {
@@ -85,7 +86,6 @@ int main(int argc, char *argv[]) {
     }
     if (argc == 6) {
         if (are_digits(argv[5]) == 0) {
-
             int sensor_fusion_interval = validate_interval(argv[5]);
 
             if (sensor_fusion_interval != -1) {
@@ -94,6 +94,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    ret = parse_file(filename, contribution_p, tolerance, stuck_interval, fusion_interval, "../data/fused_outputs.csv");
+    ret = parse_file(filename,
+                     contribution_p,
+                     tolerance,
+                     stuck_interval,
+                     fusion_interval);
     return ret;
 }
