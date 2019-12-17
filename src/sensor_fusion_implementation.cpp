@@ -1,6 +1,9 @@
 
-/** @file sf_impl.cpp
- *  @brief contains the implementations of the sensor fusion functions
+/** @file sensor_fusion_implementation.cpp
+ *  @brief Contains the implementations of the input parsing and output functions.
+ *
+ *  Contains the implementations of the sensor input parsing and output functions. These functions
+ *  include calls to sensor fusion functions.
  */
 
 /* All C++ Headers */
@@ -161,7 +164,6 @@ int parse_file(char *file_name, float contribution_p, float tolerance,
 }
 
 int validate_interval(const char *string) {
-    //TODO: accept different range for fusion and for stuck
     int value = atoi(string);
     if (!(0 <= value && value < 60)) {
         printf("Interval value entered is out of range, please enter a value from 0 to 59 in minutes");
@@ -175,7 +177,7 @@ void check_sensor_stuck(ValidationList_t *list, int interval) {
     double diff_in_seconds = 0;
 
     for (auto it = list->begin(); it != list->end(); it++) {
-        printf("checking sensor %s....\n", it->first.c_str());
+        printf("checking if sensor %s is stuck..\n", it->first.c_str());
 
         int size = it->second.data.size();
         for (int i = 0; i < size; ++i){
@@ -189,8 +191,9 @@ void check_sensor_stuck(ValidationList_t *list, int interval) {
 
                     if ((diff_in_seconds / 60) > interval) {
                         if (it->second.data[i].second == it->second.data[j].second) {
-                            char output[40];
+                            char output[60];
                             sprintf(output, "Sensor %s is stuck with value %f\n", it->first.c_str(), it->second.data[i].second);
+                            printf(output);
                             output_file(STUCK_FILE_PATH, output, APPEND);
 
                             it->second.status = SensorStatus_t::SENSOR_STATUS_STUCK;
@@ -209,7 +212,6 @@ void check_sensor_stuck(ValidationList_t *list, int interval) {
 int compare_sensors_times(Sensor_t *sensor, Sensor_t *sensor2, int interval) {
     double diff_in_seconds = 0;
 
-        //TODO: handle problem if a new day occurs
     diff_in_seconds = difftime(sensor2->time, sensor->time);
 
     printf("diff in minutes? %.0f\n", diff_in_seconds / 60);
@@ -222,11 +224,6 @@ int compare_sensors_times(Sensor_t *sensor, Sensor_t *sensor2, int interval) {
         return APPEND;
 
     }
-}
-
-void test_bench()
-{
-
 }
 
 int output_file(char *filename, char *content, int mode) {
@@ -246,7 +243,7 @@ int output_file(char *filename, char *content, int mode) {
         file_p = fopen(filename, "w");
         if (file_p == NULL) {
             printf("\nUnable to create '%s' file.\n", filename);
-            exit(EXIT_FAILURE);
+            return -1;
         }
     }
 
