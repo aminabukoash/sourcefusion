@@ -1,10 +1,13 @@
 
 /** @file fusion_algorithm.cpp
  *  @brief contains the implementation of the sensor fusion algorithm
+ *
+ *  Contains the implementation of the sensor fusion algorithm functions
  */
 
 // All C++ Headers
 #include "../inc/sensor_fusion_common.hpp"
+#include "../inc/sensor_fusion_implementation.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,21 +18,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-SensorsList_t remove_sensor_by_name(SensorsList_t sensors, char name[SENSOR_MAX_NAME_LEN]) {
-    for (int i = 0; i < sensors.size(); ++i) {
-        if (strcmp(sensors[i].name, name) == 0) {
-            sensors.erase(sensors.begin() + i);
-        }
-    }
-    return sensors;
-}
-
-void delete_element_from_double_array(double *array, int index, int size) {
-    for (int i = index; i < size - 1; ++i) {
-        array[i] = array[i + 1];
-    }
-}
 
 double *get_degree_matrix(SensorsList_t sensors_list) {
     int number_of_sensors = sensors_list.size();
@@ -118,7 +106,6 @@ double **get_principal_components(double *degree_matrix, double **eignvectors, i
         }
     }
 
-
     gsl_blas_dgemm(CblasNoTrans, CblasNoTrans,
                    1.0, p_eigen_vec, p_support_degree,
                    0.0, p_y);
@@ -139,7 +126,6 @@ double *get_contribution_rates(double *eigenvalues, int number_of_sensors) {
     double *contribution_rates = (double *) calloc(number_of_sensors, sizeof(double));
     double eignvalue_sum = 0.0;
     for (int i = 0; i < number_of_sensors; ++i) {
-        double val = eigenvalues[i];
         eignvalue_sum += eigenvalues[i];
     }
     printf("\n\nContribution rates: :\n");
@@ -194,7 +180,7 @@ double *get_integrated_support_scores(double **principal_components,
 
 
 SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list, double *integrated_scores, float tolerance) {
-
+    char *FAULTY_FILE_PATH = "../data/sensors_with_incorrect_data.txt";
     double sum = 0.0;
     int number_of_sensors = sensors_list.size();
 
@@ -213,46 +199,27 @@ SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list, double *integ
     }
 
     SensorsList_t reduced_list;
+    SensorsList_t incorrect_list;
 
 
     for (int k = 0; k < number_of_sensors; ++k) {
         if (index_to_be_deleted[k] == 0){
             reduced_list.push_back(sensors_list.at(k));
+        }else{
+            incorrect_list.push_back(sensors_list.at(k));
         }
+    }
+
+    /* Output incorrect sensor data */
+    for (int l = 0; l < incorrect_list.size(); ++l) {
+        char output[60];
+        sprintf(output, "Sensor %s is faulty with value %f\n", incorrect_list.at(l).name, incorrect_list.at(l).value);
+        output_file(FAULTY_FILE_PATH, output, APPEND);
     }
 
     printf("reduced list size: %lu\n", reduced_list.size());
 
     return reduced_list;
-
-//    double threshold_value;
-//    double scores_sum = 0.0;
-//    int number_of_sensors = sensors_list.size();
-//    char sensors_to_be_deleted_names[number_of_sensors][SENSOR_MAX_NAME_LEN];
-//    int sensors_to_be_deleted_indices[number_of_sensors];
-//    int deleted_count = 0;
-//
-//    threshold_value = fabs((scores_sum / number_of_sensors) * tolerance);
-//
-//    for (int j = 0; j < number_of_sensors; ++j) {
-//        if (fabs(integrated_scores[j]) < threshold_value) {
-//            sensors_to_be_deleted_indices[deleted_count] = j;
-//            strncpy(sensors_to_be_deleted_names[deleted_count],
-//                    sensors_list[j].name, SENSOR_MAX_NAME_LEN);
-//            deleted_count++;
-//        }
-//    }
-//
-//    for (int k = 0; k < deleted_count; ++k) {
-//        delete_element_from_double_array(integrated_scores,sensors_to_be_deleted_indices[k] - k,
-//                                         number_of_sensors);
-//        sensors_list = remove_sensor_by_name(sensors_list, sensors_to_be_deleted_names[k]);
-//        number_of_sensors--;
-//    }
-//
-//    printf("reduced list size: %lu", sensors_list.size());
-//
-//    return sensors_list;
 }
 
 double *get_weight_coefficients(double *integrated_scores, int number_of_sensors) {
@@ -311,6 +278,8 @@ double perform_sensor_fusion(SensorsList_t sensors, float p, float tolerance) {
             reduced_list.size());
 
     double fused_output = get_fused_output(reduced_list, weight_coefficients);
+
+    /* Free memory allocations that aren't needed anymore */
 
     free(degree_matrix);
     free(eigenvectors);

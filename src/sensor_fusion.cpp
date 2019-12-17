@@ -1,6 +1,8 @@
 
 /** @file source_fusion.cpp
  * @brief The main function for the Sensor Fusion Project.
+ *
+ * Contains the main function of the project and a usage function that prints the program usage instructions.
  */
 
 // All C++ Headers

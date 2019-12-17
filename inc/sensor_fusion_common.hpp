@@ -1,6 +1,8 @@
 
-/** @file SfCommon.hpp
+/** @file sensor_fusion_common.hpp
  *  @brief contains the common data structures used in the sensor fusion project
+ *
+ *  Contains the common data structures and type definitions used in the rest of the project.
  */
 
 #ifndef SF_COMMON_HPP_
@@ -39,10 +41,14 @@ using namespace std;
 #define SENSOR_MAX_NAME_LEN  46
 #define SENSOR_MAX_TIME_LEN 8
 
-// Vector of sensor data: timestamp and value
+/**
+ * @typedef Vector of sensor data: timestamp and value.
+ */
 typedef std::vector<std::pair<time_t, double>> SensorDataList_t;
 
-// sensor status enum
+/**
+ * @enum Sensor status enum
+ */
 typedef enum SensorStatus {
     SENSOR_STATUS_STUCK = 0,
     SENSOR_STATUS_ON,
@@ -50,35 +56,60 @@ typedef enum SensorStatus {
 
 } SensorStatus_t;
 
-// Sensor state Information structure, this structure hold the Sensor Status Information
+/**
+ * @typedef Sensor state Information structure, this structure hold the Sensor Status Information.
+ */
 typedef struct SensorStateInfo {
     SensorStatus_t status = {SensorStatus_t::SENSOR_STATUS_UNKNOWN}; /**< sensor status*/
     SensorDataList_t data; /**< sensor data vector*/
 } SensorStateInfo_t;
 
-// Sensor structure
+/**
+ * @struct Structure to hold sensor information.
+ */
 typedef struct Sensor {
     char name[SENSOR_MAX_NAME_LEN] = {'\0'}; /**< sensor name > **/
     time_t time; /**< sensor timestamp > **/
     double value; /**< sensor value > **/
 } Sensor_t;
 
-// Vector list of sensors
+/**
+ * @typedef Vector list of Sensors.
+ */
 typedef std::vector<Sensor_t> SensorsList_t;
 
 
-// Vector list of SensorList_t, for each SensorList_t (index) we will perform the fusion algorithm separately
-typedef std::vector<SensorsList_t> FusionList_t;
-
-//map to validate if sensor is stuck or not
+/**
+ * @typedef Map to validate if the sensor is stuck or not.
+ */
 typedef std::map<string, SensorStateInfo> ValidationList_t;
 
-
+/**
+ * @brief Creates time_t instance from char pointer.
+ *
+ * Create the corresponding time_t instance from a character string by deconstructing the time string and extracting time components.
+ * @param time The time character string
+ * @return The corresponding time_t instance.
+ */
 time_t make_time(const char *time);
 
-char *get_field(const char *line,
-                int num);
+/**
+ * @brief Get the corresponding field from the character line.
+ *
+ * Gets the corresponding field value from a comma separated line according to the provided field index.
+ * @param line The character line.
+ * @param num The index of the required field.
+ * @return The field value.
+ */
+char *get_field(const char *line, int num);
 
+/**
+ * @brief Checks if the  string is a valid number.
+ *
+ * Checks if the provided string consists of valid number digits or not.
+ * @param string The string to be validated.
+ * @return 0 if it's a valid number, -1 if it's not valid.
+ */
 int are_digits(const char *string);
 
 #endif /* SF_COMMON_HPP_ */

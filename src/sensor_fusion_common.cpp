@@ -1,6 +1,8 @@
 
 /** @file sf_impl.cpp
- *  @brief contains the common functions used in the sensor fusion project.
+ *  @brief contains the common functions used in the project.
+ *
+ *  Contains common functions that are used in the rest of the project.
  */
 
 // All C++ Headers
