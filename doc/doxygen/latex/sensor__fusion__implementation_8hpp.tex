@@ -1,0 +1,151 @@
+\hypertarget{sensor__fusion__implementation_8hpp}{}\section{inc/sensor\+\_\+fusion\+\_\+implementation.hpp File Reference}
+\label{sensor__fusion__implementation_8hpp}\index{inc/sensor\+\_\+fusion\+\_\+implementation.\+hpp@{inc/sensor\+\_\+fusion\+\_\+implementation.\+hpp}}
+
+
+Fusion top level function.  
+
+
+{\ttfamily \#include \char`\"{}sensor\+\_\+fusion\+\_\+common.\+hpp\char`\"{}}\newline
+Include dependency graph for sensor\+\_\+fusion\+\_\+implementation.\+hpp\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sensor__fusion__implementation_8hpp_add1f47e70d1e3e507b60fff136e6b36e}\label{sensor__fusion__implementation_8hpp_add1f47e70d1e3e507b60fff136e6b36e}} 
+\hyperlink{structSensor}{Sensor\+\_\+t} {\bfseries create\+\_\+sensor\+\_\+from\+\_\+line} (char $\ast$sensor\+Info)
+\item 
+int \hyperlink{sensor__fusion__implementation_8hpp_a93f8360a3b5d577ff293cc59e4918a80}{parse\+\_\+file} (char $\ast$file\+\_\+name, float contribution\+\_\+p, float tolerance, int sensor\+\_\+stuck\+\_\+interval\+\_\+minutes=10, int fusion\+\_\+interval\+\_\+minutes=2, char $\ast$output\+\_\+file\+\_\+path=\char`\"{}../data/fused\+\_\+outputs.\+csv\char`\"{})
+\begin{DoxyCompactList}\small\item\em Parse the input file and call the fusion function to fuse the values. \end{DoxyCompactList}\item 
+int \hyperlink{sensor__fusion__implementation_8hpp_a3137c2e8dc0cdd435b460fb12547b130}{validate\+\_\+interval} (const char $\ast$string)
+\begin{DoxyCompactList}\small\item\em Check if the value is within range. \end{DoxyCompactList}\item 
+void \hyperlink{sensor__fusion__implementation_8hpp_ad58184ff7c3a118614a16813b9c18c2c}{check\+\_\+sensor\+\_\+stuck} (Validation\+List\+\_\+t $\ast$list, int interval)
+\begin{DoxyCompactList}\small\item\em Chek for stuck sensors. \end{DoxyCompactList}\item 
+int \hyperlink{sensor__fusion__implementation_8hpp_a341fdcb39a09531fa4f6448ca19ded02}{compare\+\_\+sensors\+\_\+times} (\hyperlink{structSensor}{Sensor\+\_\+t} $\ast$sensor, \hyperlink{structSensor}{Sensor\+\_\+t} $\ast$sensor2, int interval)
+\begin{DoxyCompactList}\small\item\em Check if the sensor times need to be fused. \end{DoxyCompactList}\item 
+int \hyperlink{sensor__fusion__implementation_8hpp_a7f5c0c0b2569647f1a6956c516f99c4f}{output\+\_\+file} (char $\ast$filename, char $\ast$content, int mode)
+\begin{DoxyCompactList}\small\item\em Outputs the provided string to a file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Fusion top level function. 
+
+Contains the declarations for the sensor input parsing and output functions. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{sensor__fusion__implementation_8hpp_ad58184ff7c3a118614a16813b9c18c2c}\label{sensor__fusion__implementation_8hpp_ad58184ff7c3a118614a16813b9c18c2c}} 
+\index{sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}!check\+\_\+sensor\+\_\+stuck@{check\+\_\+sensor\+\_\+stuck}}
+\index{check\+\_\+sensor\+\_\+stuck@{check\+\_\+sensor\+\_\+stuck}!sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}}
+\subsubsection{\texorpdfstring{check\+\_\+sensor\+\_\+stuck()}{check\_sensor\_stuck()}}
+{\footnotesize\ttfamily void check\+\_\+sensor\+\_\+stuck (\begin{DoxyParamCaption}\item[{Validation\+List\+\_\+t $\ast$}]{list,  }\item[{int}]{interval }\end{DoxyParamCaption})}
+
+
+
+Chek for stuck sensors. 
+
+Check if the sensor is stuck at the same value for a given range. 
+\begin{DoxyParams}{Parameters}
+{\em list} & List of sensors and the values. \\
+\hline
+{\em interval} & The interval in minutes where if the value doesn\textquotesingle{}t change, the sensor is considered stuck. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{sensor__fusion__implementation_8hpp_a341fdcb39a09531fa4f6448ca19ded02}\label{sensor__fusion__implementation_8hpp_a341fdcb39a09531fa4f6448ca19ded02}} 
+\index{sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}!compare\+\_\+sensors\+\_\+times@{compare\+\_\+sensors\+\_\+times}}
+\index{compare\+\_\+sensors\+\_\+times@{compare\+\_\+sensors\+\_\+times}!sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}}
+\subsubsection{\texorpdfstring{compare\+\_\+sensors\+\_\+times()}{compare\_sensors\_times()}}
+{\footnotesize\ttfamily int compare\+\_\+sensors\+\_\+times (\begin{DoxyParamCaption}\item[{\hyperlink{structSensor}{Sensor\+\_\+t} $\ast$}]{sensor,  }\item[{\hyperlink{structSensor}{Sensor\+\_\+t} $\ast$}]{sensor2,  }\item[{int}]{interval }\end{DoxyParamCaption})}
+
+
+
+Check if the sensor times need to be fused. 
+
+Compares times between two consecutive sensor values to check if they should be fused or not. 
+\begin{DoxyParams}{Parameters}
+{\em sensor} & The first sensor instance that holds time and value. \\
+\hline
+{\em sensor2} & The first sensor instance that holds time and value. \\
+\hline
+{\em interval} & The maximum time interval to be fused in minutes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if sensors are to be fused, 1 if the second sensor will be fused in the next list. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sensor__fusion__implementation_8hpp_a7f5c0c0b2569647f1a6956c516f99c4f}\label{sensor__fusion__implementation_8hpp_a7f5c0c0b2569647f1a6956c516f99c4f}} 
+\index{sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}!output\+\_\+file@{output\+\_\+file}}
+\index{output\+\_\+file@{output\+\_\+file}!sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}}
+\subsubsection{\texorpdfstring{output\+\_\+file()}{output\_file()}}
+{\footnotesize\ttfamily int output\+\_\+file (\begin{DoxyParamCaption}\item[{char $\ast$}]{filename,  }\item[{char $\ast$}]{content,  }\item[{int}]{mode }\end{DoxyParamCaption})}
+
+
+
+Outputs the provided string to a file. 
+
+Outputs the provided string content to a specified file and creates a new file according to the writing mode provided. 
+\begin{DoxyParams}{Parameters}
+{\em filename} & The name of the file where the content will be written. \\
+\hline
+{\em content} & The string content that will be written to the file. \\
+\hline
+{\em mode} & The writing mode. It can be append or a new file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+-\/1 if the file couldn\textquotesingle{}t be opened, 0 if the content was outputted successfully. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sensor__fusion__implementation_8hpp_a93f8360a3b5d577ff293cc59e4918a80}\label{sensor__fusion__implementation_8hpp_a93f8360a3b5d577ff293cc59e4918a80}} 
+\index{sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}!parse\+\_\+file@{parse\+\_\+file}}
+\index{parse\+\_\+file@{parse\+\_\+file}!sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}}
+\subsubsection{\texorpdfstring{parse\+\_\+file()}{parse\_file()}}
+{\footnotesize\ttfamily int parse\+\_\+file (\begin{DoxyParamCaption}\item[{char $\ast$}]{file\+\_\+name,  }\item[{float}]{contribution\+\_\+p,  }\item[{float}]{tolerance,  }\item[{int}]{sensor\+\_\+stuck\+\_\+interval\+\_\+minutes = {\ttfamily 10},  }\item[{int}]{fusion\+\_\+interval\+\_\+minutes = {\ttfamily 2},  }\item[{char $\ast$}]{output\+\_\+file\+\_\+path = {\ttfamily \char`\"{}../data/fused\+\_\+outputs.csv\char`\"{}} }\end{DoxyParamCaption})}
+
+
+
+Parse the input file and call the fusion function to fuse the values. 
+
+Parse the input file provided in the data folder and retrieve all sensor values, then perform the fusion algorithm and output the results . 
+\begin{DoxyParams}{Parameters}
+{\em filename} & The name of the input file. \\
+\hline
+{\em contribution\+\_\+p} & The p parameter used in contribution rate selection. \\
+\hline
+{\em tolerance} & The tolerance ratio used in fault tolerance elimination process. \\
+\hline
+{\em sensor\+\_\+stuck\+\_\+interval\+\_\+minutes} & The minimum interval where if a sensor doesn\textquotesingle{}t change value it\textquotesingle{}s considered stuck. \\
+\hline
+{\em fusion\+\_\+interval\+\_\+minutes} & The maximum interval where sensor values are fused. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if fusion was successful, -\/1 if it failed. 
+\end{DoxyReturn}
+Handle validation list here. Validation list will be used to check if a sensor is stuck or not.
+
+if the sensor is found, we push the new data to the Sensor\+Data\+List\+\_\+t
+
+if the sensor is not found found\+:
+\begin{DoxyItemize}
+\item A Sensor\+Data\+List\+\_\+t is created and pushed to data in Sensor\+State\+\_\+\+Info\+\_\+t
+\item Sensor\+State\+Info\+\_\+t is created and pushed into the Validation\+List\+\_\+t
+\end{DoxyItemize}
+
+Handle sensor fusion lists here. Multiple \hyperlink{structSensor}{Sensor} lists (Sensors\+List\+\_\+t) are created. \hyperlink{structSensor}{Sensor} fusion will be performed on each Sensor\+List\+\_\+t\mbox{\Hypertarget{sensor__fusion__implementation_8hpp_a3137c2e8dc0cdd435b460fb12547b130}\label{sensor__fusion__implementation_8hpp_a3137c2e8dc0cdd435b460fb12547b130}} 
+\index{sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}!validate\+\_\+interval@{validate\+\_\+interval}}
+\index{validate\+\_\+interval@{validate\+\_\+interval}!sensor\+\_\+fusion\+\_\+implementation.\+hpp@{sensor\+\_\+fusion\+\_\+implementation.\+hpp}}
+\subsubsection{\texorpdfstring{validate\+\_\+interval()}{validate\_interval()}}
+{\footnotesize\ttfamily int validate\+\_\+interval (\begin{DoxyParamCaption}\item[{const char $\ast$}]{string }\end{DoxyParamCaption})}
+
+
+
+Check if the value is within range. 
+
+Check that the string is a valid number that falls in the acceptable range. 
+\begin{DoxyParams}{Parameters}
+{\em string} & The number string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The integer value if the string valid nad -\/1 otherwise. 
+\end{DoxyReturn}

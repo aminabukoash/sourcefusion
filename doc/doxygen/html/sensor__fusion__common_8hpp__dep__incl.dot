@@ -1,0 +1,16 @@
+digraph "inc/sensor_fusion_common.hpp"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node12 [label="inc/sensor_fusion_common.hpp",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node12 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="inc/fusion_algorithm.hpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$fusion__algorithm_8hpp.html",tooltip="Fusion functions declarations. "];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="src/sensor_fusion_implementation.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sensor__fusion__implementation_8cpp.html",tooltip="Contains the implementations of the input parsing and output functions. "];
+  Node12 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="inc/sensor_fusion_implementation.hpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sensor__fusion__implementation_8hpp.html",tooltip="Fusion top level function. "];
+  Node15 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="src/fusion_algorithm.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$fusion__algorithm_8cpp.html",tooltip="contains the implementation of the sensor fusion algorithm "];
+  Node15 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

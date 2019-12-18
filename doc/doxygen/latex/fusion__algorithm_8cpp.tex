@@ -1,0 +1,242 @@
+\hypertarget{fusion__algorithm_8cpp}{}\section{src/fusion\+\_\+algorithm.cpp File Reference}
+\label{fusion__algorithm_8cpp}\index{src/fusion\+\_\+algorithm.\+cpp@{src/fusion\+\_\+algorithm.\+cpp}}
+
+
+contains the implementation of the sensor fusion algorithm  
+
+
+{\ttfamily \#include \char`\"{}../inc/sensor\+\_\+fusion\+\_\+common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../inc/sensor\+\_\+fusion\+\_\+implementation.\+hpp\char`\"{}}\newline
+Include dependency graph for fusion\+\_\+algorithm.\+cpp\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double $\ast$ \hyperlink{fusion__algorithm_8cpp_a2eb74a89d7fed2cbf57b6c5c32cb3608}{get\+\_\+degree\+\_\+matrix} (Sensors\+List\+\_\+t sensors\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Get the support degree matrix. \end{DoxyCompactList}\item 
+void \hyperlink{fusion__algorithm_8cpp_ad13520a4a42af6cbb01c23391bfae75f}{get\+\_\+eigenvalues\+\_\+and\+\_\+vectors} (double $\ast$degree\+\_\+matrix, int number\+\_\+of\+\_\+sensors, double $\ast$eigenvalues, double $\ast$$\ast$eigenvectors)
+\begin{DoxyCompactList}\small\item\em Calculate the eigenvalues and eigenvectors. \end{DoxyCompactList}\item 
+double $\ast$$\ast$ \hyperlink{fusion__algorithm_8cpp_aa12a7f6462ab6a0466c70921c024a136}{get\+\_\+principal\+\_\+components} (double $\ast$degree\+\_\+matrix, double $\ast$$\ast$eignvectors, int number\+\_\+of\+\_\+sensors)
+\begin{DoxyCompactList}\small\item\em Calculate the principal components of the degree matrix. \end{DoxyCompactList}\item 
+double $\ast$ \hyperlink{fusion__algorithm_8cpp_add41478c31541de511819cb401ca4c86}{get\+\_\+contribution\+\_\+rates} (double $\ast$eigenvalues, int number\+\_\+of\+\_\+sensors)
+\begin{DoxyCompactList}\small\item\em Calculate the contribution rates of the components. \end{DoxyCompactList}\item 
+int \hyperlink{fusion__algorithm_8cpp_abb83442c29733b2f64e084553ea46f64}{select\+\_\+contribution\+\_\+rate} (double $\ast$contribution\+\_\+rates, int number\+\_\+of\+\_\+sensors, float p)
+\begin{DoxyCompactList}\small\item\em Select the contribution rates that satisfies P. \end{DoxyCompactList}\item 
+double $\ast$ \hyperlink{fusion__algorithm_8cpp_a54f4d037d4a75ad9f6d6b172f159b362}{get\+\_\+integrated\+\_\+support\+\_\+scores} (double $\ast$$\ast$principal\+\_\+components, double $\ast$contribution\+\_\+rates, int number\+\_\+of\+\_\+sensors, int m)
+\begin{DoxyCompactList}\small\item\em Compute the integrated support degree scores. \end{DoxyCompactList}\item 
+Sensors\+List\+\_\+t \hyperlink{fusion__algorithm_8cpp_a292cf38e46947a27a43ebb719ca8b5f7}{eliminate\+\_\+incorrect\+\_\+data} (Sensors\+List\+\_\+t sensors\+\_\+list, double $\ast$integrated\+\_\+scores, float tolerance)
+\begin{DoxyCompactList}\small\item\em Eliminate incorrect data according to the provided fault tolerance. \end{DoxyCompactList}\item 
+double $\ast$ \hyperlink{fusion__algorithm_8cpp_a50fb7a7db07b7597e7ef051e2d397322}{get\+\_\+weight\+\_\+coefficients} (double $\ast$integrated\+\_\+scores, int number\+\_\+of\+\_\+sensors)
+\item 
+double \hyperlink{fusion__algorithm_8cpp_a0abf99dd8da5dc40e08343f9891b5209}{get\+\_\+fused\+\_\+output} (Sensors\+List\+\_\+t sensors\+\_\+list, double $\ast$weight\+\_\+coefficients)
+\begin{DoxyCompactList}\small\item\em Compute the fused output. \end{DoxyCompactList}\item 
+double \hyperlink{fusion__algorithm_8cpp_afa889c4fe4a851d52a8e794e411c35de}{perform\+\_\+sensor\+\_\+fusion} (Sensors\+List\+\_\+t sensors, float p, float tolerance)
+\begin{DoxyCompactList}\small\item\em Perform all fusion algorithm steps. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+contains the implementation of the sensor fusion algorithm 
+
+Contains the implementation of the sensor fusion algorithm functions 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_a292cf38e46947a27a43ebb719ca8b5f7}\label{fusion__algorithm_8cpp_a292cf38e46947a27a43ebb719ca8b5f7}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!eliminate\+\_\+incorrect\+\_\+data@{eliminate\+\_\+incorrect\+\_\+data}}
+\index{eliminate\+\_\+incorrect\+\_\+data@{eliminate\+\_\+incorrect\+\_\+data}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{eliminate\+\_\+incorrect\+\_\+data()}{eliminate\_incorrect\_data()}}
+{\footnotesize\ttfamily Sensors\+List\+\_\+t eliminate\+\_\+incorrect\+\_\+data (\begin{DoxyParamCaption}\item[{Sensors\+List\+\_\+t}]{sensors\+\_\+list,  }\item[{double $\ast$}]{integrated\+\_\+scores,  }\item[{float}]{tolerance }\end{DoxyParamCaption})}
+
+
+
+Eliminate incorrect data according to the provided fault tolerance. 
+
+Remove sensors from the list that are not supported by q\% of the sensors and violate the fault tolerance percentage. 
+\begin{DoxyParams}{Parameters}
+{\em sensors} & The sensors list vector. \\
+\hline
+{\em integrated\+\_\+scores} & The integrated support degree score for all sensors. \\
+\hline
+{\em tolerance} & The fault tolerance value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the modified sensor list without faulty sensors. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_add41478c31541de511819cb401ca4c86}\label{fusion__algorithm_8cpp_add41478c31541de511819cb401ca4c86}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!get\+\_\+contribution\+\_\+rates@{get\+\_\+contribution\+\_\+rates}}
+\index{get\+\_\+contribution\+\_\+rates@{get\+\_\+contribution\+\_\+rates}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{get\+\_\+contribution\+\_\+rates()}{get\_contribution\_rates()}}
+{\footnotesize\ttfamily double$\ast$ get\+\_\+contribution\+\_\+rates (\begin{DoxyParamCaption}\item[{double $\ast$}]{eigenvalues,  }\item[{int}]{number\+\_\+of\+\_\+sensors }\end{DoxyParamCaption})}
+
+
+
+Calculate the contribution rates of the components. 
+
+Calculate the contribution rates of the individual principal components using the eigenvalues. 
+\begin{DoxyParams}{Parameters}
+{\em eigenvalues} & The eigenvalues for the support degree matrix. \\
+\hline
+{\em number\+\_\+of\+\_\+sensors} & The total sensor count. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The individual contribution rates of the principal components. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_a2eb74a89d7fed2cbf57b6c5c32cb3608}\label{fusion__algorithm_8cpp_a2eb74a89d7fed2cbf57b6c5c32cb3608}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!get\+\_\+degree\+\_\+matrix@{get\+\_\+degree\+\_\+matrix}}
+\index{get\+\_\+degree\+\_\+matrix@{get\+\_\+degree\+\_\+matrix}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{get\+\_\+degree\+\_\+matrix()}{get\_degree\_matrix()}}
+{\footnotesize\ttfamily double$\ast$ get\+\_\+degree\+\_\+matrix (\begin{DoxyParamCaption}\item[{Sensors\+List\+\_\+t}]{sensors\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Get the support degree matrix. 
+
+Calculate the support degree matrix for all sensor values at a specific time. 
+\begin{DoxyParams}{Parameters}
+{\em values} & \hyperlink{structSensor}{Sensor} values at a specific timestamp. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_ad13520a4a42af6cbb01c23391bfae75f}\label{fusion__algorithm_8cpp_ad13520a4a42af6cbb01c23391bfae75f}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!get\+\_\+eigenvalues\+\_\+and\+\_\+vectors@{get\+\_\+eigenvalues\+\_\+and\+\_\+vectors}}
+\index{get\+\_\+eigenvalues\+\_\+and\+\_\+vectors@{get\+\_\+eigenvalues\+\_\+and\+\_\+vectors}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{get\+\_\+eigenvalues\+\_\+and\+\_\+vectors()}{get\_eigenvalues\_and\_vectors()}}
+{\footnotesize\ttfamily void get\+\_\+eigenvalues\+\_\+and\+\_\+vectors (\begin{DoxyParamCaption}\item[{double $\ast$}]{degree\+\_\+matrix,  }\item[{int}]{number\+\_\+of\+\_\+sensors,  }\item[{double $\ast$}]{eigenvalues,  }\item[{double $\ast$$\ast$}]{eigenvectors }\end{DoxyParamCaption})}
+
+
+
+Calculate the eigenvalues and eigenvectors. 
+
+Calculate all the eigenvalues and vectors for the support degree matrix. 
+\begin{DoxyParams}{Parameters}
+{\em degree\+\_\+matrix} & The support degree matrix of sensor inputs at a certain timestamp. \\
+\hline
+{\em eigenvalues} & The eigenvalues for the support degree matrix. \\
+\hline
+{\em eigenvectors} & The eigenvectors for the support degree matrix. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_a0abf99dd8da5dc40e08343f9891b5209}\label{fusion__algorithm_8cpp_a0abf99dd8da5dc40e08343f9891b5209}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!get\+\_\+fused\+\_\+output@{get\+\_\+fused\+\_\+output}}
+\index{get\+\_\+fused\+\_\+output@{get\+\_\+fused\+\_\+output}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{get\+\_\+fused\+\_\+output()}{get\_fused\_output()}}
+{\footnotesize\ttfamily double get\+\_\+fused\+\_\+output (\begin{DoxyParamCaption}\item[{Sensors\+List\+\_\+t}]{sensors\+\_\+list,  }\item[{double $\ast$}]{weight\+\_\+coefficients }\end{DoxyParamCaption})}
+
+
+
+Compute the fused output. 
+
+Compute the fused output for all valid sensors using the weight coefficients. 
+\begin{DoxyParams}{Parameters}
+{\em sensor\+\_\+values} & The sensor values. \\
+\hline
+{\em weight\+\_\+coefficients} & the weight coefficient for each sensor. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The fused output for all sensors. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_a54f4d037d4a75ad9f6d6b172f159b362}\label{fusion__algorithm_8cpp_a54f4d037d4a75ad9f6d6b172f159b362}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!get\+\_\+integrated\+\_\+support\+\_\+scores@{get\+\_\+integrated\+\_\+support\+\_\+scores}}
+\index{get\+\_\+integrated\+\_\+support\+\_\+scores@{get\+\_\+integrated\+\_\+support\+\_\+scores}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{get\+\_\+integrated\+\_\+support\+\_\+scores()}{get\_integrated\_support\_scores()}}
+{\footnotesize\ttfamily double$\ast$ get\+\_\+integrated\+\_\+support\+\_\+scores (\begin{DoxyParamCaption}\item[{double $\ast$$\ast$}]{principal\+\_\+components,  }\item[{double $\ast$}]{contribution\+\_\+rates,  }\item[{int}]{number\+\_\+of\+\_\+sensors,  }\item[{int}]{m }\end{DoxyParamCaption})}
+
+
+
+Compute the integrated support degree scores. 
+
+Compute the integrated support degree score for all sensors using the principal components and contribution rates. 
+\begin{DoxyParams}{Parameters}
+{\em principal\+\_\+components} & The principal components of the support degree matrix. \\
+\hline
+{\em contribution\+\_\+rates} & The individual contribution rates of the principal components. \\
+\hline
+{\em number\+\_\+of\+\_\+sensors} & The total sensor count. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The integrated support degree score for all sensors. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_aa12a7f6462ab6a0466c70921c024a136}\label{fusion__algorithm_8cpp_aa12a7f6462ab6a0466c70921c024a136}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!get\+\_\+principal\+\_\+components@{get\+\_\+principal\+\_\+components}}
+\index{get\+\_\+principal\+\_\+components@{get\+\_\+principal\+\_\+components}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{get\+\_\+principal\+\_\+components()}{get\_principal\_components()}}
+{\footnotesize\ttfamily double$\ast$$\ast$ get\+\_\+principal\+\_\+components (\begin{DoxyParamCaption}\item[{double $\ast$}]{degree\+\_\+matrix,  }\item[{double $\ast$$\ast$}]{eigenvectors,  }\item[{int}]{number\+\_\+of\+\_\+sensors }\end{DoxyParamCaption})}
+
+
+
+Calculate the principal components of the degree matrix. 
+
+Calculate the principal components of the support degree matrix using the eigenvectors. 
+\begin{DoxyParams}{Parameters}
+{\em eigenvalues} & The eigenvalues for the support degree matrix. \\
+\hline
+{\em eigenvectors} & The eigenvectors for the support degree matrix. \\
+\hline
+{\em number\+\_\+of\+\_\+sensors} & The total sensor count. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The principal components of the support degree matrix. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_a50fb7a7db07b7597e7ef051e2d397322}\label{fusion__algorithm_8cpp_a50fb7a7db07b7597e7ef051e2d397322}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!get\+\_\+weight\+\_\+coefficients@{get\+\_\+weight\+\_\+coefficients}}
+\index{get\+\_\+weight\+\_\+coefficients@{get\+\_\+weight\+\_\+coefficients}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{get\+\_\+weight\+\_\+coefficients()}{get\_weight\_coefficients()}}
+{\footnotesize\ttfamily double$\ast$ get\+\_\+weight\+\_\+coefficients (\begin{DoxyParamCaption}\item[{double $\ast$}]{integrated\+\_\+scores,  }\item[{int}]{number\+\_\+of\+\_\+sensors }\end{DoxyParamCaption})}
+
+Compute the weight coefficient for each sensor. 
+\begin{DoxyParams}{Parameters}
+{\em integrated\+\_\+scores} & The integrated support degree score for all sensors. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The weight coefficient for each sensor. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_afa889c4fe4a851d52a8e794e411c35de}\label{fusion__algorithm_8cpp_afa889c4fe4a851d52a8e794e411c35de}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!perform\+\_\+sensor\+\_\+fusion@{perform\+\_\+sensor\+\_\+fusion}}
+\index{perform\+\_\+sensor\+\_\+fusion@{perform\+\_\+sensor\+\_\+fusion}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{perform\+\_\+sensor\+\_\+fusion()}{perform\_sensor\_fusion()}}
+{\footnotesize\ttfamily double perform\+\_\+sensor\+\_\+fusion (\begin{DoxyParamCaption}\item[{Sensors\+List\+\_\+t}]{sensors,  }\item[{float}]{p,  }\item[{float}]{tolerance }\end{DoxyParamCaption})}
+
+
+
+Perform all fusion algorithm steps. 
+
+A high level function to perform all fusion algorithm steps by calling the corresponding functions.. 
+\begin{DoxyParams}{Parameters}
+{\em sensors} & The sensors list vector. \\
+\hline
+{\em p} & The contribution parameter p. \\
+\hline
+{\em tolerance} & The fault tolerance value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The fused output for all sensors. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{fusion__algorithm_8cpp_abb83442c29733b2f64e084553ea46f64}\label{fusion__algorithm_8cpp_abb83442c29733b2f64e084553ea46f64}} 
+\index{fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}!select\+\_\+contribution\+\_\+rate@{select\+\_\+contribution\+\_\+rate}}
+\index{select\+\_\+contribution\+\_\+rate@{select\+\_\+contribution\+\_\+rate}!fusion\+\_\+algorithm.\+cpp@{fusion\+\_\+algorithm.\+cpp}}
+\subsubsection{\texorpdfstring{select\+\_\+contribution\+\_\+rate()}{select\_contribution\_rate()}}
+{\footnotesize\ttfamily int select\+\_\+contribution\+\_\+rate (\begin{DoxyParamCaption}\item[{double $\ast$}]{contribution\+\_\+rates,  }\item[{int}]{number\+\_\+of\+\_\+sensors,  }\item[{float}]{p }\end{DoxyParamCaption})}
+
+
+
+Select the contribution rates that satisfies P. 
+
+Calculate the cumulative contribution rates and select the number of rates that satisfies parameter P. 
+\begin{DoxyParams}{Parameters}
+{\em rates\+\_\+to\+\_\+be\+\_\+deleted\+\_\+indices} & the indices of rates to be deleted \\
+\hline
+{\em contribution\+\_\+rates} & The individual contribution rates of the principal components. \\
+\hline
+{\em number\+\_\+of\+\_\+sensors} & The total sensor count. \\
+\hline
+{\em p} & The contribution parameter p. \\
+\hline
+\end{DoxyParams}
