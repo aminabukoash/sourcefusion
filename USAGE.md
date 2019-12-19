@@ -35,29 +35,32 @@ To execute a command that will parse the file input.csv with:
  Stuck interval = 25 minutes
  Fusion interval = 4 minutes
  
- You need to run the following command:
+ You need to navigate to the bin folder and run the following command:
  
 ```sh
-SourceFusion.exe input.csv 49 25 4
+cd bin;
+./FusedOutput input.csv 49 25 4
 ```
+To use your own .csv file, put it in the data directory and replace the file name in the command above
   
 # Installation
 
 Installation instructions can be found in [INSTALL.md](https://github.com/aminabukoash/sourcefusion/blob/master/INSTALL.md) 
 
 # Run Tests
+Navigate into the created bin directory and execute the test binaries
 
-
-```
-SourceFusion.exe make tests
+```sh
+cd bin;
+./TESTS
 ```
 
 # Print Usage
 
-User can run the below command to know the details about input parameters.
+User can run the below command to know the details about input parameters. (you have to be in the bin directory)
 
 ```
-SourceFusion.exe
+./FusedOutput
 ```
 
 # Output File Generation
