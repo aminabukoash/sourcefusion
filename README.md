@@ -55,5 +55,5 @@ For dependency installation and how to build and run the software, refer to INST
 For usage information please refer to [USAGE.md](https://github.com/aminabukoash/sourcefusion/blob/master/USAGE.md) 
 
 # Documentations
-> - For the user level documentation, refer to doc/user_guide.pdf file
+> - For the user level documentation, refer to  [USAGE.md](https://github.com/aminabukoash/sourcefusion/blob/master/USAGE.md) 
 > - For the developer guide, refer to to doc/doxygen/html/index.html
