@@ -10,7 +10,7 @@ sensor data is received. The software receives the data from all the sensors syn
 # Authors
 > - Chidiebere Onyedinma <conye066@uottawa.ca> University of Ottawa | @blacktorch
 > - Ziyad Rabeh <ziyad.rabeh@carleton.ca> Carleton University | @ZiyadR
-> - Amin Abu Koash <amin.abukoash@carleton.ca> Carleton University | @aminabukoash
+> - Amin Abu Koash <aminabukoash@carleton.ca> Carleton University | @aminabukoash
 
 # Source Files Organization
 Our Project will follow the conventional C file structure.<br>
