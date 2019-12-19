@@ -52,6 +52,7 @@ sourcefusion<br>
 
 # Installation and Usage
 For dependency installation and how to build and run the software, refer to INSTALL.md file
+For usage information please refer to [USAGE.md](https://github.com/aminabukoash/sourcefusion/blob/master/USAGE.md) 
 
 # Documentations
 > - For the user level documentation, refer to doc/user_guide.pdf file
