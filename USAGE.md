@@ -43,7 +43,7 @@ SourceFusion.exe input.csv 49 25 4
   
 # Installation
 
-Installation instructions can be found in [INSTALL.md](https://github.com/aminabukoash/sourcefusion/blob/master/README.md) 
+Installation instructions can be found in [INSTALL.md](https://github.com/aminabukoash/sourcefusion/blob/master/INSTALL.md) 
 
 # Run Tests
 
