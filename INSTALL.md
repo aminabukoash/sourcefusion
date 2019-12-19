@@ -86,4 +86,4 @@ make tests
 make all
 ````
 The compiled binaries can be found in the 'bin' directory<br>
-Refer to the doc/user_guide.pdf file on how to use the software
+Refer to the [USAGE.md](https://github.com/aminabukoash/sourcefusion/blob/master/USAGE.md)  file on how to use the software
