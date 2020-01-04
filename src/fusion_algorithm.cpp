@@ -174,7 +174,7 @@ int select_contribution_rate(double *contribution_rates,
             return m;
         }
     }
-
+    return number_of_sensors;
 }
 
 double* get_integrated_support_scores(double **principal_components,
@@ -203,7 +203,7 @@ double* get_integrated_support_scores(double **principal_components,
 SensorsList_t eliminate_incorrect_data(SensorsList_t sensors_list,
                                        double *integrated_scores,
                                        float tolerance) {
-    char *FAULTY_FILE_PATH = "../data/sensors_with_incorrect_data.txt";
+    char *FAULTY_FILE_PATH = (char *)"../data/sensors_with_incorrect_data.txt";
     double sum = 0.0;
     int number_of_sensors = sensors_list.size();
 

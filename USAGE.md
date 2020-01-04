@@ -14,11 +14,19 @@ The following time formats are both accepted by the program  `10:45` or `10.45`.
  
 A sensor fusion algorithm is executed for each group of sensors received synchronously (at the same time). The software will determine if there are sensors that are stuck, or if there are invalid date to be ignored.
 
-# Usage
+# Usage 
 
+###Unix
 ```sh
-SourceFusion.exe filename contribution_p tolerance stuck_interval fusion_interval
+./FusedOutput filename contribution_p tolerance stuck_interval fusion_interval
 ```
+
+### Windows
+
+```cmd
+FusedOutput.exe filename contribution_p tolerance stuck_interval fusion_interval
+```
+
 
   **filename**              : The name of the file with the input values. (required).
   **contribution_p**        : The p parameter used in contribution rate selection (default = 85%).
@@ -50,6 +58,14 @@ Installation instructions can be found in [INSTALL.md](https://github.com/aminab
 # Run Tests
 Navigate into the created bin directory and execute the test binaries
 
+
+### Windows
+```sh
+cd bin
+TESTS.exe
+```
+
+### Unix
 ```sh
 cd bin;
 ./TESTS
@@ -59,8 +75,16 @@ cd bin;
 
 User can run the below command to know the details about input parameters. (you have to be in the bin directory)
 
-```
+### Unix
+
+```sh
 ./FusedOutput
+```
+
+### Windows
+
+```cmd
+FusedOutput.exe
 ```
 
 # Output File Generation

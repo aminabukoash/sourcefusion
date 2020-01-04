@@ -65,7 +65,7 @@ int parse_file(char *file_name,
         char line[1024];
         char time_str[20];
         int count = 0;
-        char *not_reach_end = "";
+        char *not_reach_end = (char *)"";
         SensorsList_t sensorList;
         ValidationList_t validationList;
 
@@ -76,9 +76,9 @@ int parse_file(char *file_name,
             count++;
             if (count != 1) {
                 Sensor_t sensor;
-                char *sensorInfo = strdup(line);
+               // char *sensorInfo = strdup(line);
 
-                sensor = create_sensor_from_line(sensorInfo);
+                sensor = create_sensor_from_line(line);
 
                 if (!sensorList.empty()) {
                     /**
@@ -122,9 +122,7 @@ int parse_file(char *file_name,
                     }
 
                     if (count == 3) {
-                        output_file(OUTPUT_FILE_PATH,
-                                    "Time,Fused Value\n",
-                                    APPEND);
+                        output_file(OUTPUT_FILE_PATH, (char *)"Time,Fused Value\n", APPEND);
                     }
 
                     /**
@@ -139,7 +137,7 @@ int parse_file(char *file_name,
                                                   fusion_interval_minutes);
 
                     if (compare_status == APPEND && not_reach_end) {
-                        strcpy(time_str, get_field(sensorInfo, 1));
+                        strcpy(time_str, get_field(line, 1));
                         sensorList.push_back(sensor);
                         //TODO: should we check for duplicate sensors?
                     }
@@ -174,7 +172,6 @@ int parse_file(char *file_name,
                     validationList.insert(make_pair(sensor.name,
                                                     sensorInfo));
                 }
-                free(sensorInfo);
             }
         }
 
@@ -198,7 +195,7 @@ int validate_interval(const char *string) {
 
 void check_sensor_stuck(ValidationList_t *list,
                         int interval) {
-    char *STUCK_FILE_PATH = "../data/stuck_sensors.txt";
+    char *STUCK_FILE_PATH = (char *)"../data/stuck_sensors.txt";
     double diff_in_seconds = 0;
 
     for (auto it = list->begin(); it != list->end(); it++) {
@@ -224,7 +221,7 @@ void check_sensor_stuck(ValidationList_t *list,
                                     "Sensor %s is stuck with value %f\n",
                                     it->first.c_str(),
                                     it->second.data[i].second);
-                            printf(output);
+                            printf("%s",output);
                             output_file(STUCK_FILE_PATH, output, APPEND);
 
                             it->second.status =
