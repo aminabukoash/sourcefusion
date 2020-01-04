@@ -40,27 +40,25 @@ double INTEGRATED_SUPPORT_SCORE[4] = { 0.801645, 0.235114, 0.337271, 0.801645 };
 
 double WEIGHT_COEFFICIENTS[2] = { 0.773222, 0.226778 };
 
+char test_result_file[25] = "../tests/results.txt";
+
 SensorsList_t list, reduced_list;
 
 void run_automated_unit_test() {
 
-    Sensor_t sensor = { .value = 53.2, .time = make_time("12:00"), .name =
-            "sens1" };
-    Sensor_t sensor2 = { .value = 52.6, .time = make_time("12:00"), .name =
-            "sens2" };
-    Sensor_t sensor3 = { .value = 52.7, .time = make_time("12:20"), .name =
-            "sens3" };
-    Sensor_t sensor4 = { .value = 53.2, .time = make_time("12:20"), .name =
-            "sens4" };
+    Sensor_t sensor ((char *)"sens1", make_time("12:00"), 53.2);
+    Sensor_t sensor2 ((char *)"sens2", make_time("12:00"), 52.6);
+    Sensor_t sensor3 ((char *)"sens3",  make_time("12:20"), 52.7 );
+    Sensor_t sensor4 ((char *)"sens4", make_time("12:20"), 53.2 );
 
     list.push_back(sensor);
     list.push_back(sensor2);
     list.push_back(sensor3);
     list.push_back(sensor4);
-    output_file("../tests/results.txt", "============TEST TIME: ", NEW_LIST);
-    output_file("../tests/results.txt", __TIMESTAMP__, APPEND);
-    output_file("../tests/results.txt",
-                "=============\n\n======================TEST RESULTS=========================="
+    output_file(test_result_file, (char *)"============TEST TIME: ", NEW_LIST);
+    output_file(test_result_file, (char *)__TIMESTAMP__, APPEND);
+    output_file(test_result_file,
+            (char *)"=============\n\n======================TEST RESULTS=========================="
                 "\n\n",
                 APPEND);
 
@@ -94,12 +92,12 @@ int compare_doubles(double a,
 
 void automated_parse_input_file_test() {
     char output[256];
-    int status = parse_file("../tests/data/test_data.csv",
+    int status = parse_file((char *)"../tests/data/test_data.csv",
                             ALGORITHM_PARAMETER,
                             TOLERANCE,
                             10,
                             2,
-                            "../tests/data/test_output_data.csv");
+            (char *)"../tests/data/test_output_data.csv");
     int result = 1;
     if (status != 0) {
         result = 0;
@@ -112,7 +110,7 @@ void automated_compare_sensors_times_test() {
     char output[256];
     int result = compare_sensors_times(&list.at(0), &list.at(2), INTERVAL);
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 }
 
@@ -126,7 +124,7 @@ void automated_validate_interval_test() {
     }
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 
 }
@@ -136,13 +134,13 @@ void automated_create_sensor_from_line_test() {
 
     int result = 1;
 
-    char *csv_line = "10:05,sensor2,34";
+    char *csv_line = (char *)"10:05,sensor2,34";
     Sensor_t sensor = create_sensor_from_line(csv_line);
 
     result = compare_doubles(sensor.value, 34.0);
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 
 }
@@ -163,7 +161,7 @@ void automated_degree_matrix_test() {
     }
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 
 }
@@ -194,7 +192,7 @@ void automated_eigenvalues_and_vectors_test() {
 
     }
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 }
 
@@ -227,7 +225,7 @@ void automated_principal_components_test() {
     }
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 
 }
@@ -247,7 +245,7 @@ void automated_contribution_rates_k_test() {
     }
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 }
 
@@ -261,7 +259,7 @@ void automated_contribution_rate_m_test() {
         result = 0;
     }
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 }
 
@@ -292,7 +290,7 @@ void automated_integrated_support_scores_test() {
     }
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 
     free(principal_components);
@@ -310,7 +308,7 @@ void automated_eliminate_incorrect_data_test() {
     }
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 }
 
@@ -330,7 +328,7 @@ void automated_weight_coefficients_test() {
     }
 
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 
 }
@@ -340,7 +338,7 @@ void automated_fused_output_test() {
     double fused_output = get_fused_output(reduced_list, WEIGHT_COEFFICIENTS);
     int result = compare_doubles(53.200000, fused_output);
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 }
 
@@ -351,7 +349,7 @@ void automated_perform_sensor_fusion_test() {
                                               TOLERANCE);
     int result = compare_doubles(53.200000, fuse_final);
     ASSERT_RESULT(result, output)
-    output_file("../tests/results.txt", output, APPEND);
+    output_file(test_result_file, output, APPEND);
     printf("%s", output);
 }
 

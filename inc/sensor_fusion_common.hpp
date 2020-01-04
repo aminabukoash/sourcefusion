@@ -41,7 +41,7 @@ using namespace std;
 #define SENSOR_MAX_NAME_LEN  46
 #define SENSOR_MAX_TIME_LEN 8
 
-#define OUTPUT_FILE_NAME "../data/fused_outputs.csv"
+#define OUTPUT_FILE_NAME (char *)"../data/fused_outputs.csv"
 
 /**
  * @typedef Vector of sensor data: timestamp and value.
@@ -70,6 +70,9 @@ typedef struct SensorStateInfo {
  * @struct Structure to hold sensor information.
  */
 typedef struct Sensor {
+    explicit Sensor(){}
+    explicit Sensor(char sensor_name[SENSOR_MAX_NAME_LEN], time_t time_stamp, double sensor_value) : name(""),
+    time(time_stamp), value(sensor_value){}
     char name[SENSOR_MAX_NAME_LEN] = {'\0'}; /**< sensor name > **/
     time_t time; /**< sensor timestamp > **/
     double value; /**< sensor value > **/
