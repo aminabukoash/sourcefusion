@@ -21,13 +21,14 @@ Following are the requirements to run this software:
 
 * GNU Make
 * GCC
+* G++
 * GSL(GNU Scientific Library) Version 2.6
 
 # Compilers
 
 This software has been built using these compilers:
 
-* gcc (7.4.0)
+* g++ (7.4.0)
 * Apple clang (11.0.0)
 
 # Dependency Installation
@@ -55,10 +56,15 @@ All dependencies for the Windows Platform was installed through **Cygwin** find 
 8. Click on search box and look for following packages:
 	* make (Under Devel )
 	* gcc-core (Under Devel category)
+	* gcc-g++ (Under Devel category)
 	* libgsl-devel (Under Libs category)
 	* gsl (Under Science category)
+	> - Click on the dropdown under the *New* column and change it from *Skip* to the version you want to install for each of the packages above.
 
 9. Click on Next. All the packages along with its dependencies will be downloaded.
+
+10. Add the bin directory of cygwin to your system environment *path*
+	> - C:\cygwin64\bin
 
 **macOS**<br>
 To install the gsl library on macOS, simply use 'brew' and run the following command.
